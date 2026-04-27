@@ -1,11 +1,11 @@
 package com.sanctuary.save;
 
 import com.almasb.fxgl.dsl.FXGL;
-import com.sanctuary.entities.EntityType;
+import com.sanctuary.entity.EntityType;
 
 import java.io.*;
 
-public class SaveManager {
+public class SaveService {
 
     private static final String SAVE_FILE = "sanctuary_save.dat";
 
