@@ -5,6 +5,7 @@ import com.sanctuary.config.GameConfig;
 import com.sanctuary.input.PlayerInputController;
 import com.sanctuary.world.MapLoader;
 import com.sanctuary.world.MapService;
+import com.sanctuary.world.TransitionService;
 
 public class GameBootstrap {
 
@@ -18,12 +19,14 @@ public class GameBootstrap {
         MapService mapService = new MapService(session, mapLoader);
         PlayerInputController playerInputController = new PlayerInputController(session);
         CameraController cameraController = new CameraController();
+        TransitionService transitionService = new TransitionService();
 
         return new GameContext(
                 session,
                 mapService,
                 playerInputController,
-                cameraController
+                cameraController,
+                transitionService
         );
     }
 }

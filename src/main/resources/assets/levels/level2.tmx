@@ -106,7 +106,6 @@
   <object id="4" type="WALL" x="673.116" y="307.589" width="29.8216" height="43.4543"/>
   <object id="5" type="WALL" x="672.264" y="597.284" width="29.8216" height="38.3421"/>
   <object id="6" type="WALL" x="800.071" y="604.1" width="32.3777" height="32.3777"/>
-  <object id="8" x="673.968" y="11.0766" width="0.852046" height="2.55614"/>
   <object id="9" type="WALL" x="674.332" y="2.06773" width="92.873" height="57.9391"/>
   <object id="10" type="WALL" x="546.161" y="381.717" width="28.1175" height="28.9696"/>
   <object id="11" type="WALL" x="513.784" y="441.36" width="28.9696" height="33.2298"/>
