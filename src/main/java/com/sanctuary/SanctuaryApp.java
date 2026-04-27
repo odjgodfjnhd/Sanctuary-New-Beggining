@@ -6,15 +6,18 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.dsl.FXGL;
 import com.sanctuary.config.GameConfig;
+import com.sanctuary.entity.EntityType;
 import com.sanctuary.game.GameBootstrap;
 import com.sanctuary.game.GameContext;
 import com.sanctuary.ui.SanctuaryMenu;
+import com.sanctuary.world.TransitionComponent;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
 
 public class SanctuaryApp extends GameApplication {
 
     private final GameContext gameContext = new GameBootstrap().bootstrapNewGame();
+    private boolean transitionInProgress = false;
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -44,16 +47,43 @@ public class SanctuaryApp extends GameApplication {
 
         gameContext.getMapService().loadCurrentMap();
 
-        gameContext.getCameraController().bindToPlayer(
-                gameContext.getSession().getPlayer(),
-                gameContext.getSession().getCurrentWorldMap()
-        );
+        bindCameraToCurrentMap();
     }
 
     @Override
     protected void initPhysics() {
-        // Коллизии стен теперь обрабатываются внутри MovementComponent:
-        // движение по X и Y с откатом позиции при пересечении стены.
+        FXGL.onCollisionBegin(EntityType.PLAYER, EntityType.MAP_TRANSITION, (player, transition) -> {
+            if (transitionInProgress) {
+                return;
+            }
+
+            transitionInProgress = true;
+
+            TransitionComponent transitionComponent = transition.getComponent(TransitionComponent.class);
+
+            System.out.println(
+                    "Transition to map: "
+                            + transitionComponent.getTargetMapId()
+                            + ", spawn: "
+                            + transitionComponent.getTargetSpawnId()
+            );
+
+            gameContext.getMapService().changeMap(
+                    transitionComponent.getTargetMapId(),
+                    transitionComponent.getTargetSpawnId()
+            );
+
+            bindCameraToCurrentMap();
+
+            transitionInProgress = false;
+        });
+    }
+
+    private void bindCameraToCurrentMap() {
+        gameContext.getCameraController().bindToPlayer(
+                gameContext.getSession().getPlayer(),
+                gameContext.getSession().getCurrentWorldMap()
+        );
     }
 
     public static void main(String[] args) {
