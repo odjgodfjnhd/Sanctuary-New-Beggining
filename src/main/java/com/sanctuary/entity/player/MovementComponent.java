@@ -52,7 +52,7 @@ public class MovementComponent extends Component {
 
         entity.setX(nextX);
 
-        if (isCollidingWithWall()) {
+        if (isCollidingWithBlockingEntity()) {
             entity.setX(oldX);
         }
     }
@@ -67,15 +67,21 @@ public class MovementComponent extends Component {
 
         entity.setY(nextY);
 
-        if (isCollidingWithWall()) {
+        if (isCollidingWithBlockingEntity()) {
             entity.setY(oldY);
         }
     }
 
-    private boolean isCollidingWithWall() {
-        return FXGL.getGameWorld().getEntitiesByType(EntityType.WALL).stream()
-                .filter(wall -> wall.isActive())
-                .anyMatch(wall -> entity.isColliding(wall));
+
+    private boolean isCollidingWithBlockingEntity() {
+        return isCollidingWithType(EntityType.WALL)
+                || isCollidingWithType(EntityType.NPC);
+    }
+
+    private boolean isCollidingWithType(EntityType type) {
+        return FXGL.getGameWorld().getEntitiesByType(type).stream()
+                .filter(other -> other.isActive())
+                .anyMatch(other -> entity.isColliding(other));
     }
 
     public void setMovement(double moveX, double moveY) {

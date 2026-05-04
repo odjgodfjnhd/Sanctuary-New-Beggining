@@ -4,6 +4,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.sanctuary.entity.player.MovementComponent;
 import com.sanctuary.game.GameSession;
+import com.sanctuary.interaction.InteractionService;
 import javafx.scene.input.KeyCode;
 
 import java.util.EnumMap;
@@ -13,6 +14,8 @@ public class PlayerInputController {
 
     private final GameSession session;
     private final Map<KeyCode, Boolean> keyStates = new EnumMap<>(KeyCode.class);
+
+    private InteractionService interactionService;
 
     public PlayerInputController(GameSession session) {
         this.session = session;
@@ -26,12 +29,20 @@ public class PlayerInputController {
         initKeyState(KeyCode.RIGHT);
     }
 
+    public void setInteractionService(InteractionService interactionService) {
+        this.interactionService = interactionService;
+    }
+
     public void registerInput() {
         FXGL.getInput().addEventHandler(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
             KeyCode key = event.getCode();
             if (keyStates.containsKey(key)) {
                 keyStates.put(key, true);
                 updateMovement();
+            }
+
+            if (key == KeyCode.E && interactionService != null) {
+                interactionService.interact();
             }
         });
 

@@ -113,8 +113,8 @@ public final class Player {
                 .at(x, y)
                 .view(texture)
                 .bbox(BoundingShape.box(
-                        GameConstants.PLAYER_WIDTH,
-                        GameConstants.PLAYER_HEIGHT
+                        GameConstants.PLAYER_HITBOX_WIDTH,
+                        GameConstants.PLAYER_HITBOX_HEIGHT
                 ))
                 .collidable()
                 .with(new MovementComponent())

@@ -9,6 +9,8 @@ public final class GameConstants {
 
     public static final double PLAYER_WIDTH = 32;
     public static final double PLAYER_HEIGHT = 32;
+    public static final double PLAYER_HITBOX_WIDTH = 20;
+    public static final double PLAYER_HITBOX_HEIGHT = 24;
 
     public static final double PLAYER_SPRITE_SCALE = 2.0;
     public static final double PLAYER_MOVE_SPEED = 200.0;
