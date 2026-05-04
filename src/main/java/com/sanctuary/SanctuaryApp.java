@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 public class SanctuaryApp extends GameApplication {
 
     private final GameContext gameContext = new GameBootstrap().bootstrapNewGame();
-    private boolean transitionInProgress = false;
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -53,11 +52,9 @@ public class SanctuaryApp extends GameApplication {
     @Override
     protected void initPhysics() {
         FXGL.onCollisionBegin(EntityType.PLAYER, EntityType.MAP_TRANSITION, (player, transition) -> {
-            if (transitionInProgress) {
+            if (gameContext.getTransitionService().isTransitionInProgress()) {
                 return;
             }
-
-            transitionInProgress = true;
 
             TransitionComponent transitionComponent = transition.getComponent(TransitionComponent.class);
 
@@ -68,14 +65,14 @@ public class SanctuaryApp extends GameApplication {
                             + transitionComponent.getTargetSpawnId()
             );
 
-            gameContext.getMapService().changeMap(
-                    transitionComponent.getTargetMapId(),
-                    transitionComponent.getTargetSpawnId()
-            );
+            gameContext.getTransitionService().playFadeTransition(() -> {
+                gameContext.getMapService().changeMap(
+                        transitionComponent.getTargetMapId(),
+                        transitionComponent.getTargetSpawnId()
+                );
 
-            bindCameraToCurrentMap();
-
-            transitionInProgress = false;
+                bindCameraToCurrentMap();
+            });
         });
     }
 
