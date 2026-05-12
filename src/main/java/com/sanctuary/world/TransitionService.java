@@ -5,8 +5,9 @@ import javafx.animation.FadeTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import com.sanctuary.core.GameService;
 
-public class TransitionService {
+public class TransitionService implements GameService{
 
     private boolean transitionInProgress = false;
 

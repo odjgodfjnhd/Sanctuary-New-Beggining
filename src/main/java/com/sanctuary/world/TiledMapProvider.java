@@ -11,10 +11,14 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
-public class MapLoader {
+public class TiledMapProvider implements MapProvider {
 
-    public WorldMap loadMapData(String mapId) {
+    private static final Logger LOGGER = Logger.getLogger(TiledMapProvider.class.getName());
+
+    @Override
+    public WorldMap loadMap(String mapId) {
         String mapFileName = mapId + AssetPaths.TMX_EXTENSION;
         String resourcePath = AssetPaths.LEVELS_RESOURCE_DIR + mapFileName;
 
@@ -69,7 +73,8 @@ public class MapLoader {
         }
     }
 
-    public void loadLevelIntoWorld(WorldMap worldMap) {
+    @Override
+    public void loadIntoWorld(WorldMap worldMap) {
         FXGL.setLevelFromMap(worldMap.getMapFileName());
     }
 
@@ -136,7 +141,14 @@ public class MapLoader {
 
         worldMap.addSpawnPoint(new SpawnPoint(spawnId, x, y));
 
-        System.out.println("Loaded spawn point from Tiled: id=" + spawnId + ", x=" + x + ", y=" + y);
+        LOGGER.info(() ->
+                "Loaded spawn point from Tiled: id="
+                        + spawnId
+                        + ", x="
+                        + x
+                        + ", y="
+                        + y
+        );
     }
 
     private void ensureDefaultSpawnExists(WorldMap worldMap) {
@@ -147,9 +159,10 @@ public class MapLoader {
                     GameConstants.SPAWN_FALLBACK_Y
             ));
 
-            System.out.println(
+            LOGGER.warning(() ->
                     "Default spawn was not found in Tiled. Using fallback: "
-                            + GameConstants.SPAWN_FALLBACK_X + ", "
+                            + GameConstants.SPAWN_FALLBACK_X
+                            + ", "
                             + GameConstants.SPAWN_FALLBACK_Y
             );
         }
@@ -159,6 +172,7 @@ public class MapLoader {
         if (first != null && !first.isBlank()) {
             return first;
         }
+
         return second;
     }
 

@@ -2,15 +2,15 @@ package com.sanctuary.entity.player;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
-import com.sanctuary.config.GameConstants;
-import com.sanctuary.entity.EntityType;
+import com.sanctuary.config.PlayerConfig;
+import com.sanctuary.entity.common.BlockingComponent;
 import com.sanctuary.entity.common.Direction;
 
 public class MovementComponent extends Component {
 
     private double moveX;
     private double moveY;
-    private double speed = GameConstants.PLAYER_MOVE_SPEED;
+    private double speed = PlayerConfig.MOVE_SPEED;
     private Direction facingDirection = Direction.DOWN;
 
     private double minX = 0;
@@ -72,15 +72,13 @@ public class MovementComponent extends Component {
         }
     }
 
-
     private boolean isCollidingWithBlockingEntity() {
-        return isCollidingWithType(EntityType.WALL)
-                || isCollidingWithType(EntityType.NPC);
-    }
-
-    private boolean isCollidingWithType(EntityType type) {
-        return FXGL.getGameWorld().getEntitiesByType(type).stream()
+        return FXGL.getGameWorld()
+                .getEntities()
+                .stream()
+                .filter(other -> other != entity)
                 .filter(other -> other.isActive())
+                .filter(other -> other.hasComponent(BlockingComponent.class))
                 .anyMatch(other -> entity.isColliding(other));
     }
 

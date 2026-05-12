@@ -1,15 +1,17 @@
 package com.sanctuary.interaction;
 
 import com.almasb.fxgl.entity.Entity;
+import com.sanctuary.core.GameService;
 import com.sanctuary.entity.EntityType;
 import com.sanctuary.entity.npc.NPCComponent;
 import com.sanctuary.game.GameSession;
 
 import java.util.Comparator;
+import java.util.logging.Logger;
 
-public class InteractionService {
+public class InteractionService implements GameService {
 
-    private static final double INTERACTION_DISTANCE = 48.0;
+    private static final Logger LOGGER = Logger.getLogger(InteractionService.class.getName());
 
     private final GameSession session;
 
@@ -24,23 +26,20 @@ public class InteractionService {
             return;
         }
 
-        session.getPlayer()
-                .getWorld()
+        player.getWorld()
                 .getEntitiesByType(EntityType.NPC)
                 .stream()
                 .filter(Entity::isActive)
-                .filter(npc -> distanceBetween(player, npc) <= INTERACTION_DISTANCE)
-                .min(Comparator.comparingDouble(npc -> distanceBetween(player, npc)))
+                .filter(npc -> npc.hasComponent(NPCComponent.class))
+                .map(npc -> npc.getComponent(NPCComponent.class))
+                .filter(interactable -> interactable.canInteract(player))
+                .min(Comparator.comparingDouble(interactable ->
+                        distanceBetween(player, interactable.getEntity())
+                ))
                 .ifPresentOrElse(
-                        this::interactWithNpc,
-                        () -> System.out.println("Nothing to interact with")
+                        interactable -> interactable.interact(player),
+                        () -> LOGGER.info("Nothing to interact with")
                 );
-    }
-
-    private void interactWithNpc(Entity npc) {
-        NPCComponent npcComponent = npc.getComponent(NPCComponent.class);
-
-        System.out.println(npcComponent.getName() + ": " + npcComponent.getDialogue());
     }
 
     private double distanceBetween(Entity first, Entity second) {
