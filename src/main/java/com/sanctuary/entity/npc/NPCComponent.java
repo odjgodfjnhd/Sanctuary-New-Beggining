@@ -26,7 +26,7 @@ public class NPCComponent extends Component implements Interactable {
 
     @Override
     public void interact(Entity player) {
-        LOGGER.info(() -> name + ": " + dialogue);
+        LOGGER.info(() -> "Interaction requested with NPC: " + name);
     }
 
     @Override

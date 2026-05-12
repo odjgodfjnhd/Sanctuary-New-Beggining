@@ -2,6 +2,7 @@ package com.sanctuary.interaction;
 
 import com.almasb.fxgl.entity.Entity;
 import com.sanctuary.core.GameService;
+import com.sanctuary.dialogue.DialogueService;
 import com.sanctuary.entity.EntityType;
 import com.sanctuary.entity.npc.NPCComponent;
 import com.sanctuary.game.GameSession;
@@ -14,9 +15,11 @@ public class InteractionService implements GameService {
     private static final Logger LOGGER = Logger.getLogger(InteractionService.class.getName());
 
     private final GameSession session;
+    private final DialogueService dialogueService;
 
-    public InteractionService(GameSession session) {
+    public InteractionService(GameSession session, DialogueService dialogueService) {
         this.session = session;
+        this.dialogueService = dialogueService;
     }
 
     public void interact() {
@@ -26,20 +29,33 @@ public class InteractionService implements GameService {
             return;
         }
 
-        player.getWorld()
+        findNearestInteractableNpc(player)
+                .ifPresentOrElse(
+                        npc -> startNpcDialogue(player, npc),
+                        () -> LOGGER.info("Nothing to interact with")
+                );
+    }
+
+    private java.util.Optional<NPCComponent> findNearestInteractableNpc(Entity player) {
+        return player.getWorld()
                 .getEntitiesByType(EntityType.NPC)
                 .stream()
                 .filter(Entity::isActive)
                 .filter(npc -> npc.hasComponent(NPCComponent.class))
                 .map(npc -> npc.getComponent(NPCComponent.class))
-                .filter(interactable -> interactable.canInteract(player))
-                .min(Comparator.comparingDouble(interactable ->
-                        distanceBetween(player, interactable.getEntity())
-                ))
-                .ifPresentOrElse(
-                        interactable -> interactable.interact(player),
-                        () -> LOGGER.info("Nothing to interact with")
-                );
+                .filter(npcComponent -> npcComponent.canInteract(player))
+                .min(Comparator.comparingDouble(npcComponent ->
+                        distanceBetween(player, npcComponent.getEntity())
+                ));
+    }
+
+    private void startNpcDialogue(Entity player, NPCComponent npcComponent) {
+        npcComponent.interact(player);
+
+        dialogueService.startDialogue(
+                npcComponent.getName(),
+                npcComponent.getDialogue()
+        );
     }
 
     private double distanceBetween(Entity first, Entity second) {
