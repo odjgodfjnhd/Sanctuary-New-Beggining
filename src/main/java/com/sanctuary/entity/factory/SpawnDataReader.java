@@ -47,7 +47,7 @@ public final class SpawnDataReader {
         try {
             String value = data.get(key);
 
-            if (value.isBlank()) {
+            if (value == null || value.isBlank()) {
                 throw new IllegalStateException("SpawnData key '" + key + "' is blank");
             }
 
@@ -68,7 +68,7 @@ public final class SpawnDataReader {
         try {
             String value = data.get(key);
 
-            if (value.isBlank()) {
+            if (value == null || value.isBlank()) {
                 return defaultValue;
             }
 

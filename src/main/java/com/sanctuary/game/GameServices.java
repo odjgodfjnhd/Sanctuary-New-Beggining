@@ -5,9 +5,11 @@ import com.sanctuary.interaction.InteractionService;
 import com.sanctuary.world.MapService;
 import com.sanctuary.world.TransitionService;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class GameServices implements GameService {
+public final class GameServices implements GameService {
 
     private final MapService mapService;
     private final TransitionService transitionService;
@@ -30,7 +32,9 @@ public class GameServices implements GameService {
 
     @Override
     public void dispose() {
-        services().forEach(GameService::dispose);
+        List<GameService> servicesToDispose = new ArrayList<>(services());
+        Collections.reverse(servicesToDispose);
+        servicesToDispose.forEach(GameService::dispose);
     }
 
     public MapService getMapService() {

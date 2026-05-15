@@ -2,7 +2,6 @@ package com.sanctuary.ui;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
-import com.sanctuary.ui.style.MenuStyles;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -11,10 +10,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.Objects;
+
 import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
 import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 
 public class SanctuaryMenu extends FXGLMenu {
+
+    private static final String MENU_CSS_PATH = "/assets/ui/css/menu.css";
+    private static final String MENU_BUTTON_STYLE_CLASS = "menu-button";
 
     private static final int MENU_BUTTON_WIDTH = 200;
     private static final int MENU_BUTTON_HEIGHT = 50;
@@ -25,7 +29,13 @@ public class SanctuaryMenu extends FXGLMenu {
     public SanctuaryMenu() {
         super(MenuType.MAIN_MENU);
 
+        loadStylesheet();
         showMainMenu();
+    }
+
+    private void loadStylesheet() {
+        String cssResource = Objects.requireNonNull(getClass().getResource(MENU_CSS_PATH)).toExternalForm();
+        getContentRoot().getStylesheets().add(cssResource);
     }
 
     private void showMainMenu() {
@@ -62,10 +72,7 @@ public class SanctuaryMenu extends FXGLMenu {
 
         button.setFont(Font.font(24));
         button.setPrefSize(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
-        button.setStyle(MenuStyles.menuButtonNormal());
-
-        button.setOnMouseEntered(event -> button.setStyle(MenuStyles.menuButtonHover()));
-        button.setOnMouseExited(event -> button.setStyle(MenuStyles.menuButtonNormal()));
+        button.getStyleClass().add(MENU_BUTTON_STYLE_CLASS);
         button.setOnAction(event -> action.run());
 
         return button;
@@ -76,10 +83,7 @@ public class SanctuaryMenu extends FXGLMenu {
 
         button.setFont(Font.font(20));
         button.setPrefSize(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT);
-        button.setStyle(MenuStyles.menuButtonNormal());
-
-        button.setOnMouseEntered(event -> button.setStyle(MenuStyles.menuButtonHover()));
-        button.setOnMouseExited(event -> button.setStyle(MenuStyles.menuButtonNormal()));
+        button.getStyleClass().add(MENU_BUTTON_STYLE_CLASS);
         button.setOnAction(event -> action.run());
 
         return button;
