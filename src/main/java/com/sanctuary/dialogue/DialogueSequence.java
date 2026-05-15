@@ -1,7 +1,6 @@
 package com.sanctuary.dialogue;
 
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 
 public class DialogueSequence {
@@ -14,7 +13,7 @@ public class DialogueSequence {
             throw new IllegalArgumentException("Dialogue sequence must contain at least one line");
         }
 
-        this.lines = Collections.unmodifiableList(new ArrayList<>(lines));
+        this.lines = List.copyOf(lines);
     }
 
     public DialogueLine getCurrentLine() {
