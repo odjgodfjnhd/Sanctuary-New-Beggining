@@ -9,23 +9,39 @@ public class DialogueService implements GameService {
 
     private static final Logger LOGGER = Logger.getLogger(DialogueService.class.getName());
 
-    private DialogueView dialogueView;
+    private final DialogueConfig config;
+    private final DialogueSequenceParser sequenceParser;
     private final DialogueTextAnimator textAnimator;
 
+    private DialogueView dialogueView;
     private DialogueSequence currentSequence;
     private DialogueState state = DialogueState.CLOSED;
 
-    public DialogueService() {
+    public DialogueService(DialogueConfig config) {
+        this.config = config;
+        this.sequenceParser = new DialogueSequenceParser(config);
         this.textAnimator = new DialogueTextAnimator();
     }
 
+    @Override
+    public void initialize() {
+        dialogueView = new DialogueView(config);
+    }
+
+    @Override
+    public void dispose() {
+        closeDialogue();
+    }
+
     public void startDialogue(String speakerName, String dialogueText) {
+        ensureInitialized();
+
         if (isDialogueOpen()) {
             advance();
             return;
         }
 
-        currentSequence = DialogueSequence.fromText(speakerName, dialogueText);
+        currentSequence = sequenceParser.parse(speakerName, dialogueText);
 
         LOGGER.info(() -> "Starting dialogue with: " + speakerName);
 
@@ -33,22 +49,11 @@ public class DialogueService implements GameService {
     }
 
     public void advance() {
-        if (state == DialogueState.CLOSED || currentSequence == null) {
-            return;
-        }
-
-        if (state == DialogueState.PRINTING) {
-            textAnimator.completeImmediately(getDialogueView()::updateText);
-            state = DialogueState.WAITING_FOR_ADVANCE;
-            return;
-        }
-
-        if (state == DialogueState.WAITING_FOR_ADVANCE) {
-            if (currentSequence.hasNextLine()) {
-                currentSequence.moveToNextLine();
-                showCurrentLine();
-            } else {
-                closeDialogue();
+        switch (state) {
+            case PRINTING -> skipAnimation();
+            case WAITING_FOR_ADVANCE -> moveToNextLineOrClose();
+            case CLOSED -> {
+                // Nothing
             }
         }
     }
@@ -57,38 +62,38 @@ public class DialogueService implements GameService {
         return state != DialogueState.CLOSED;
     }
 
-    @Override
-    public void dispose() {
-        closeDialogue();
-    }
-
     private void showCurrentLine() {
         DialogueLine line = currentSequence.getCurrentLine();
 
-        DialogueView view = getDialogueView();
-
-        view.show(
+        dialogueView.show(
                 line,
                 currentSequence.getCurrentIndex() + 1,
                 currentSequence.getLineCount()
         );
 
-        state = DialogueState.PRINTING;
+        transitionTo(DialogueState.PRINTING);
 
         textAnimator.start(
-                line.getText(),
-                DialogueConfig.TYPEWRITER_DELAY,
-                view::updateText,
-                () -> state = DialogueState.WAITING_FOR_ADVANCE
+                line.text(),
+                config.typewriterDelay(),
+                dialogueView::updateText,
+                () -> transitionTo(DialogueState.WAITING_FOR_ADVANCE)
         );
     }
 
-    private DialogueView getDialogueView() {
-        if (dialogueView == null) {
-            dialogueView = new DialogueView();
+    private void skipAnimation() {
+        textAnimator.completeImmediately(dialogueView::updateText);
+        transitionTo(DialogueState.WAITING_FOR_ADVANCE);
+    }
+
+    private void moveToNextLineOrClose() {
+        if (currentSequence.hasNextLine()) {
+            currentSequence.moveToNextLine();
+            showCurrentLine();
+            return;
         }
 
-        return dialogueView;
+        closeDialogue();
     }
 
     private void closeDialogue() {
@@ -99,8 +104,20 @@ public class DialogueService implements GameService {
         }
 
         currentSequence = null;
-        state = DialogueState.CLOSED;
+        transitionTo(DialogueState.CLOSED);
 
         LOGGER.info("Dialogue closed");
+    }
+
+    private void transitionTo(DialogueState nextState) {
+        state = nextState;
+    }
+
+    private void ensureInitialized() {
+        if (dialogueView == null) {
+            throw new IllegalStateException(
+                    "DialogueService is not initialized. Call initialize() before using it."
+            );
+        }
     }
 }

@@ -9,9 +9,9 @@ import java.util.function.Consumer;
 public class DialogueTextAnimator {
 
     private Timeline timeline;
-    private String fullText = "";
-    private int visibleCharacters = 0;
-    private boolean printing = false;
+    private String fullText;
+    private int visibleCharacters;
+    private boolean printing;
 
     public void start(
             String text,
@@ -27,18 +27,10 @@ public class DialogueTextAnimator {
 
         onTextChanged.accept("");
 
-        timeline = new Timeline(new KeyFrame(delay, event -> {
-            visibleCharacters++;
-
-            if (visibleCharacters >= fullText.length()) {
-                onTextChanged.accept(fullText);
-                finish(onFinished);
-                return;
-            }
-
-            onTextChanged.accept(fullText.substring(0, visibleCharacters));
-        }));
-
+        timeline = new Timeline(new KeyFrame(delay, event -> revealNextCharacter(
+                onTextChanged,
+                onFinished
+        )));
         timeline.setCycleCount(Math.max(fullText.length(), 1));
         timeline.play();
     }
@@ -63,6 +55,18 @@ public class DialogueTextAnimator {
         }
 
         printing = false;
+    }
+
+    private void revealNextCharacter(Consumer<String> onTextChanged, Runnable onFinished) {
+        visibleCharacters++;
+
+        if (visibleCharacters >= fullText.length()) {
+            onTextChanged.accept(fullText);
+            finish(onFinished);
+            return;
+        }
+
+        onTextChanged.accept(fullText.substring(0, visibleCharacters));
     }
 
     private void finish(Runnable onFinished) {

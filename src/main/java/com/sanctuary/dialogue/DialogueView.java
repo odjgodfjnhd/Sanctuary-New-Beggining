@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 
 public class DialogueView {
 
+    private final DialogueConfig config;
     private final StackPane root = new StackPane();
     private final Label speakerLabel = new Label();
     private final Label textLabel = new Label();
@@ -20,7 +21,9 @@ public class DialogueView {
 
     private boolean attached = false;
 
-    public DialogueView() {
+    public DialogueView(DialogueConfig config) {
+        this.config = config;
+
         configureRoot();
         configureLabels();
         compose();
@@ -30,7 +33,7 @@ public class DialogueView {
         updateLayout();
 
         speakerLabel.setText(
-                line.getSpeakerName()
+                line.speakerName()
                         + "  "
                         + currentLineIndex
                         + "/"
@@ -38,7 +41,7 @@ public class DialogueView {
         );
 
         textLabel.setText("");
-        hintLabel.setText(DialogueConfig.ADVANCE_HINT);
+        hintLabel.setText(config.advanceHint());
 
         if (!attached) {
             FXGL.getGameScene().addUINode(root);
@@ -64,15 +67,15 @@ public class DialogueView {
     }
 
     private void configureLabels() {
-        speakerLabel.setTextFill(DialogueConfig.SPEAKER_TEXT_COLOR);
-        speakerLabel.setFont(Font.font(DialogueConfig.SPEAKER_FONT_SIZE));
+        speakerLabel.setTextFill(config.speakerTextColor());
+        speakerLabel.setFont(Font.font(config.speakerFontSize()));
 
-        textLabel.setTextFill(DialogueConfig.DIALOGUE_TEXT_COLOR);
-        textLabel.setFont(Font.font(DialogueConfig.DIALOGUE_FONT_SIZE));
+        textLabel.setTextFill(config.dialogueTextColor());
+        textLabel.setFont(Font.font(config.dialogueFontSize()));
         textLabel.setWrapText(true);
 
-        hintLabel.setTextFill(DialogueConfig.HINT_TEXT_COLOR);
-        hintLabel.setFont(Font.font(DialogueConfig.HINT_FONT_SIZE));
+        hintLabel.setTextFill(config.hintTextColor());
+        hintLabel.setFont(Font.font(config.hintFontSize()));
     }
 
     private void compose() {
@@ -90,24 +93,35 @@ public class DialogueView {
         background.widthProperty().bind(root.prefWidthProperty());
         background.heightProperty().bind(root.prefHeightProperty());
 
-        background.setFill(DialogueConfig.BACKGROUND_COLOR);
-        background.setStroke(DialogueConfig.BORDER_COLOR);
-        background.setStrokeWidth(DialogueConfig.BORDER_WIDTH);
-        background.setArcWidth(DialogueConfig.CORNER_RADIUS);
-        background.setArcHeight(DialogueConfig.CORNER_RADIUS);
+        background.setFill(createBackgroundColor());
+        background.setStroke(config.borderColor());
+        background.setStrokeWidth(config.borderWidth());
+        background.setArcWidth(config.cornerRadius());
+        background.setArcHeight(config.cornerRadius());
 
         return background;
+    }
+
+    private Color createBackgroundColor() {
+        Color baseColor = config.backgroundColor();
+
+        return new Color(
+                baseColor.getRed(),
+                baseColor.getGreen(),
+                baseColor.getBlue(),
+                config.backgroundOpacity()
+        );
     }
 
     private void updateLayout() {
         double appWidth = FXGL.getAppWidth();
         double appHeight = FXGL.getAppHeight();
 
-        double width = Math.max(DialogueConfig.MIN_WIDTH, appWidth * DialogueConfig.WIDTH_RATIO);
-        double height = Math.max(DialogueConfig.MIN_HEIGHT, appHeight * DialogueConfig.HEIGHT_RATIO);
+        double width = Math.max(config.minWidth(), appWidth * config.widthRatio());
+        double height = Math.max(config.minHeight(), appHeight * config.heightRatio());
 
         double x = (appWidth - width) / 2.0;
-        double y = appHeight - height - DialogueConfig.BOTTOM_MARGIN;
+        double y = appHeight - height - config.bottomMargin();
 
         root.setPrefSize(width, height);
         root.setTranslateX(x);

@@ -1,20 +1,11 @@
 package com.sanctuary.dialogue;
 
-public class DialogueLine {
+import java.util.Objects;
 
-    private final String speakerName;
-    private final String text;
+public record DialogueLine(String speakerName, String text) {
 
-    public DialogueLine(String speakerName, String text) {
-        this.speakerName = speakerName;
-        this.text = text;
-    }
-
-    public String getSpeakerName() {
-        return speakerName;
-    }
-
-    public String getText() {
-        return text;
+    public DialogueLine {
+        speakerName = Objects.requireNonNull(speakerName, "speakerName must not be null");
+        text = Objects.requireNonNull(text, "text must not be null");
     }
 }
