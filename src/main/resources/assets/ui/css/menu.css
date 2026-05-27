@@ -1,0 +1,15 @@
+.menu-button {
+    -fx-background-color: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-border-color: gold;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+}
+
+.menu-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5a5a5a, #3a3a3a);
+    -fx-text-fill: gold;
+    -fx-border-width: 3;
+}

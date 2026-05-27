@@ -2,7 +2,6 @@ package com.sanctuary.camera;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.sanctuary.config.GameConfig;
 import com.sanctuary.world.WorldMap;
 
 public class CameraController {
@@ -14,10 +13,13 @@ public class CameraController {
 
         var viewport = FXGL.getGameScene().getViewport();
 
+        double viewportCenterX = FXGL.getAppWidth() / 2.0;
+        double viewportCenterY = FXGL.getAppHeight() / 2.0;
+
         viewport.bindToEntity(
                 player,
-                GameConfig.APP_WIDTH / 2.0,
-                GameConfig.APP_HEIGHT / 2.0
+                viewportCenterX,
+                viewportCenterY
         );
 
         int worldWidth = (int) worldMap.getPixelWidth();

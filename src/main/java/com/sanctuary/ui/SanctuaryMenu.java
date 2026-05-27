@@ -10,13 +10,36 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.Objects;
+
 import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
 import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 
 public class SanctuaryMenu extends FXGLMenu {
 
+    private static final String MENU_CSS_PATH = "/assets/ui/css/menu.css";
+    private static final String MENU_BUTTON_STYLE_CLASS = "menu-button";
+
+    private static final int MENU_BUTTON_WIDTH = 200;
+    private static final int MENU_BUTTON_HEIGHT = 50;
+
+    private static final int SMALL_BUTTON_WIDTH = 200;
+    private static final int SMALL_BUTTON_HEIGHT = 40;
+
     public SanctuaryMenu() {
         super(MenuType.MAIN_MENU);
+
+        loadStylesheet();
+        showMainMenu();
+    }
+
+    private void loadStylesheet() {
+        String cssResource = Objects.requireNonNull(getClass().getResource(MENU_CSS_PATH)).toExternalForm();
+        getContentRoot().getStylesheets().add(cssResource);
+    }
+
+    private void showMainMenu() {
+        getContentRoot().getChildren().clear();
 
         Rectangle bg = new Rectangle(getAppWidth(), getAppHeight(), Color.DARKBLUE);
 
@@ -45,45 +68,25 @@ public class SanctuaryMenu extends FXGLMenu {
     }
 
     private Button createMenuButton(String text, Runnable action) {
-        Button btn = new Button(text);
-        btn.setFont(Font.font(24));
-        btn.setPrefSize(200, 50);
-        btn.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #4a4a4a, #2a2a2a);" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-color: gold;" +
-                        "-fx-border-radius: 10;" +
-                        "-fx-border-width: 2;"
-        );
+        Button button = new Button(text);
 
-        btn.setOnMouseEntered(e ->
-                btn.setStyle(
-                        "-fx-background-color: linear-gradient(to bottom, #5a5a5a, #3a3a3a);" +
-                                "-fx-text-fill: gold;" +
-                                "-fx-font-weight: bold;" +
-                                "-fx-background-radius: 10;" +
-                                "-fx-border-color: gold;" +
-                                "-fx-border-radius: 10;" +
-                                "-fx-border-width: 3;"
-                )
-        );
+        button.setFont(Font.font(24));
+        button.setPrefSize(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
+        button.getStyleClass().add(MENU_BUTTON_STYLE_CLASS);
+        button.setOnAction(event -> action.run());
 
-        btn.setOnMouseExited(e ->
-                btn.setStyle(
-                        "-fx-background-color: linear-gradient(to bottom, #4a4a4a, #2a2a2a);" +
-                                "-fx-text-fill: white;" +
-                                "-fx-font-weight: bold;" +
-                                "-fx-background-radius: 10;" +
-                                "-fx-border-color: gold;" +
-                                "-fx-border-radius: 10;" +
-                                "-fx-border-width: 2;"
-                )
-        );
+        return button;
+    }
 
-        btn.setOnAction(e -> action.run());
-        return btn;
+    private Button createSmallButton(String text, Runnable action) {
+        Button button = new Button(text);
+
+        button.setFont(Font.font(20));
+        button.setPrefSize(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT);
+        button.getStyleClass().add(MENU_BUTTON_STYLE_CLASS);
+        button.setOnAction(event -> action.run());
+
+        return button;
     }
 
     private void showOptions() {
@@ -97,22 +100,15 @@ public class SanctuaryMenu extends FXGLMenu {
         titleText.setTranslateX((double) getAppWidth() / 2 - 100);
         titleText.setTranslateY(150);
 
-        Button backBtn = new Button("← Вернуться в меню");
-        backBtn.setFont(Font.font(20));
-        backBtn.setPrefSize(200, 40);
-        backBtn.setTranslateX((double) getAppWidth() / 2 - 100);
-        backBtn.setTranslateY(300);
-        backBtn.setOnAction(e -> {
-            getContentRoot().getChildren().clear();
-            SanctuaryMenu mainMenu = new SanctuaryMenu();
-            getContentRoot().getChildren().addAll(mainMenu.getContentRoot().getChildren());
-        });
-
         Text infoText = new Text("Здесь будут настройки:\n- Громкость\n- Управление\n- Графика");
         infoText.setFont(Font.font(18));
         infoText.setFill(Color.LIGHTGRAY);
         infoText.setTranslateX((double) getAppWidth() / 2 - 150);
         infoText.setTranslateY(220);
+
+        Button backBtn = createSmallButton("← Вернуться в меню", this::showMainMenu);
+        backBtn.setTranslateX((double) getAppWidth() / 2 - 100);
+        backBtn.setTranslateY(300);
 
         getContentRoot().getChildren().addAll(bg, titleText, infoText, backBtn);
     }

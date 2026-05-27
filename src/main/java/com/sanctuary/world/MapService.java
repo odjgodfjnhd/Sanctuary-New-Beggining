@@ -2,7 +2,8 @@ package com.sanctuary.world;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.sanctuary.config.GameConstants;
+import com.sanctuary.config.PlayerConfig;
+import com.sanctuary.core.GameService;
 import com.sanctuary.entity.EntityType;
 import com.sanctuary.entity.factory.GameEntityFactory;
 import com.sanctuary.entity.player.MovementComponent;
@@ -12,15 +13,16 @@ import com.sanctuary.game.GameSession;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapService {
+public class MapService implements GameService {
 
     private final GameSession session;
-    private final MapLoader mapLoader;
+    private final MapProvider mapProvider;
+
     private boolean entityFactoryRegistered = false;
 
-    public MapService(GameSession session, MapLoader mapLoader) {
+    public MapService(GameSession session, MapProvider mapProvider) {
         this.session = session;
-        this.mapLoader = mapLoader;
+        this.mapProvider = mapProvider;
     }
 
     public void loadCurrentMap() {
@@ -31,12 +33,12 @@ public class MapService {
             throw new IllegalStateException("Current map id is not set");
         }
 
-        WorldMap worldMap = mapLoader.loadMapData(mapId);
+        WorldMap worldMap = mapProvider.loadMap(mapId);
         session.setCurrentWorldMap(worldMap);
 
         clearWorld();
         ensureEntityFactoryRegistered();
-        mapLoader.loadLevelIntoWorld(worldMap);
+        mapProvider.loadIntoWorld(worldMap);
 
         SpawnPoint spawnPoint = resolveSpawnPoint(worldMap, spawnId);
         session.setCurrentSpawnPoint(spawnPoint);
@@ -62,8 +64,8 @@ public class MapService {
     private void configurePlayerBounds(Entity player, WorldMap worldMap) {
         MovementComponent movement = player.getComponent(MovementComponent.class);
 
-        double maxX = Math.max(0, worldMap.getPixelWidth() - GameConstants.PLAYER_WIDTH);
-        double maxY = Math.max(0, worldMap.getPixelHeight() - GameConstants.PLAYER_HEIGHT);
+        double maxX = Math.max(0, worldMap.getPixelWidth() - PlayerConfig.WIDTH);
+        double maxY = Math.max(0, worldMap.getPixelHeight() - PlayerConfig.HEIGHT);
 
         movement.setWorldBounds(0, 0, maxX, maxY);
     }

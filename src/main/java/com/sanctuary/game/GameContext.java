@@ -1,47 +1,30 @@
 package com.sanctuary.game;
 
-import com.sanctuary.camera.CameraController;
-import com.sanctuary.input.PlayerInputController;
-import com.sanctuary.world.MapService;
-import com.sanctuary.world.TransitionService;
-
 public class GameContext {
 
     private final GameSession session;
-    private final MapService mapService;
-    private final PlayerInputController playerInputController;
-    private final CameraController cameraController;
-    private final TransitionService transitionService;
+    private final GameServices services;
+    private final GameControllers controllers;
 
     public GameContext(
             GameSession session,
-            MapService mapService,
-            PlayerInputController playerInputController,
-            CameraController cameraController,
-            TransitionService transitionService
+            GameServices services,
+            GameControllers controllers
     ) {
         this.session = session;
-        this.mapService = mapService;
-        this.playerInputController = playerInputController;
-        this.cameraController = cameraController;
-        this.transitionService = transitionService;
+        this.services = services;
+        this.controllers = controllers;
     }
 
     public GameSession getSession() {
         return session;
     }
 
-    public MapService getMapService() {
-        return mapService;
+    public GameServices getServices() {
+        return services;
     }
 
-    public PlayerInputController getPlayerInputController() {
-        return playerInputController;
+    public GameControllers getControllers() {
+        return controllers;
     }
-
-    public CameraController getCameraController() {
-        return cameraController;
-    }
-
-    public TransitionService getTransitionService() {return transitionService; }
 }

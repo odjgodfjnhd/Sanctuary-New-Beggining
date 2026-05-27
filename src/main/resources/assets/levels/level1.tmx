@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="left-up" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="15">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="left-up" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="35">
  <tileset firstgid="1" name="tile" tilewidth="32" tileheight="32" tilecount="64" columns="8">
   <image source="TX Tileset Grass.png" width="256" height="256"/>
  </tileset>
@@ -86,7 +86,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1449,1450,1451,1444,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1428,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1436,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1444,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1444,328,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1428,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1436,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1444,0,0,0,0,0,0,0,
@@ -109,8 +109,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,357,358,357,358,359,357,358,359,359,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,323,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,327,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -135,14 +135,29 @@
    </properties>
   </object>
   <object id="14" name="entrance_from_level2" type="PLAYER_SPAWN" x="795" y="95" width="37" height="34"/>
+  <object id="15" type="NPC" x="738" y="177" width="26" height="45">
+   <properties>
+    <property name="dialogue" value="Hello, junk!"/>
+    <property name="name" value="mystreious_fridge"/>
+   </properties>
+  </object>
+  <object id="17" type="WALL" x="674" y="161" width="9" height="93"/>
  </objectgroup>
  <objectgroup id="9" name="collision">
   <object id="3" type="WALL" x="719" y="589"/>
   <object id="6" type="WALL" x="607" y="383" width="32" height="126"/>
   <object id="7" type="WALL" x="193" y="384" width="31" height="125"/>
   <object id="8" type="WALL" x="65" y="420" width="31" height="28"/>
-  <object id="9" type="WALL" x="226" y="226" width="370" height="58"/>
-  <object id="10" type="WALL" x="225" y="148" width="379" height="42"/>
   <object id="12" type="WALL" x="416" y="449" width="33" height="34"/>
+  <object id="23" type="WALL" x="224" y="158" width="350" height="32"/>
+  <object id="24" type="WALL" x="226" y="259" width="360" height="26"/>
+  <object id="27" type="WALL" x="660" y="207" width="10" height="44"/>
+  <object id="28" type="WALL" x="648" y="213" width="10" height="38"/>
+  <object id="29" type="WALL" x="632" y="221" width="12" height="30"/>
+  <object id="30" type="WALL" x="615" y="231" width="14" height="20"/>
+  <object id="31" type="WALL" x="602" y="236" width="10" height="17"/>
+  <object id="32" type="WALL" x="651" y="153" width="19" height="13"/>
+  <object id="33" type="WALL" x="623" y="160" width="24" height="12"/>
+  <object id="34" type="WALL" x="600" y="169" width="20" height="15"/>
  </objectgroup>
 </map>

@@ -25,6 +25,8 @@ public class SanctuaryApp extends GameApplication {
         settings.setTitle(GameConfig.TITLE);
         settings.setVersion(GameConfig.VERSION);
         settings.setMainMenuEnabled(GameConfig.MAIN_MENU_ENABLED);
+        settings.setFullScreenAllowed(GameConfig.FULLSCREEN_ALLOWED);
+        settings.setFullScreenFromStart(GameConfig.FULLSCREEN_FROM_START);
 
         settings.setSceneFactory(new SceneFactory() {
             @NotNull
@@ -37,14 +39,14 @@ public class SanctuaryApp extends GameApplication {
 
     @Override
     protected void initInput() {
-        gameContext.getPlayerInputController().registerInput();
+        gameContext.getControllers().registerInput();
     }
 
     @Override
     protected void initGame() {
         FXGL.getGameScene().setBackgroundColor(Color.BLACK);
 
-        gameContext.getMapService().loadCurrentMap();
+        gameContext.getServices().getMapService().loadCurrentMap();
 
         bindCameraToCurrentMap();
     }
@@ -52,21 +54,14 @@ public class SanctuaryApp extends GameApplication {
     @Override
     protected void initPhysics() {
         FXGL.onCollisionBegin(EntityType.PLAYER, EntityType.MAP_TRANSITION, (player, transition) -> {
-            if (gameContext.getTransitionService().isTransitionInProgress()) {
+            if (gameContext.getServices().getTransitionService().isTransitionInProgress()) {
                 return;
             }
 
             TransitionComponent transitionComponent = transition.getComponent(TransitionComponent.class);
 
-            System.out.println(
-                    "Transition to map: "
-                            + transitionComponent.getTargetMapId()
-                            + ", spawn: "
-                            + transitionComponent.getTargetSpawnId()
-            );
-
-            gameContext.getTransitionService().playFadeTransition(() -> {
-                gameContext.getMapService().changeMap(
+            gameContext.getServices().getTransitionService().playFadeTransition(() -> {
+                gameContext.getServices().getMapService().changeMap(
                         transitionComponent.getTargetMapId(),
                         transitionComponent.getTargetSpawnId()
                 );
@@ -77,13 +72,9 @@ public class SanctuaryApp extends GameApplication {
     }
 
     private void bindCameraToCurrentMap() {
-        gameContext.getCameraController().bindToPlayer(
+        gameContext.getControllers().getCameraController().bindToPlayer(
                 gameContext.getSession().getPlayer(),
                 gameContext.getSession().getCurrentWorldMap()
         );
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
