@@ -2,6 +2,7 @@ package com.sanctuary.input;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.sanctuary.dialogue.DialogueService;
 import com.sanctuary.entity.player.MovementComponent;
 import com.sanctuary.game.GameSession;
 import com.sanctuary.interaction.InteractionService;
@@ -12,11 +13,17 @@ public class PlayerInputController implements InputHandler {
 
     private final GameSession session;
     private final InteractionService interactionService;
+    private final DialogueService dialogueService;
     private final PlayerMovementInputState movementInputState;
 
-    public PlayerInputController(GameSession session, InteractionService interactionService) {
+    public PlayerInputController(
+            GameSession session,
+            InteractionService interactionService,
+            DialogueService dialogueService
+    ) {
         this.session = session;
         this.interactionService = interactionService;
+        this.dialogueService = dialogueService;
         this.movementInputState = new PlayerMovementInputState();
     }
 
@@ -33,6 +40,11 @@ public class PlayerInputController implements InputHandler {
     private void handleKeyPressed(KeyEvent event) {
         KeyCode key = event.getCode();
 
+        if (dialogueService.isDialogueOpen()) {
+            handleDialogueInput(key);
+            return;
+        }
+
         if (movementInputState.handles(key)) {
             movementInputState.press(key);
             updateMovement();
@@ -40,16 +52,38 @@ public class PlayerInputController implements InputHandler {
 
         if (key == PlayerKeyBindings.INTERACT) {
             interactionService.interact();
+            stopMovementIfDialogueOpened();
         }
     }
 
     private void handleKeyReleased(KeyEvent event) {
         KeyCode key = event.getCode();
 
+        if (dialogueService.isDialogueOpen()) {
+            return;
+        }
+
         if (movementInputState.handles(key)) {
             movementInputState.release(key);
             updateMovement();
         }
+    }
+
+    private void handleDialogueInput(KeyCode key) {
+        if (key == PlayerKeyBindings.INTERACT
+                || key == KeyCode.SPACE
+                || key == KeyCode.ENTER) {
+            dialogueService.advance();
+        }
+    }
+
+    private void stopMovementIfDialogueOpened() {
+        if (!dialogueService.isDialogueOpen()) {
+            return;
+        }
+
+        movementInputState.clear();
+        updateMovement();
     }
 
     private void updateMovement() {

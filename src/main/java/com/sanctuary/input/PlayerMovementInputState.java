@@ -32,6 +32,10 @@ public class PlayerMovementInputState {
         }
     }
 
+    public void clear() {
+        pressedKeys.replaceAll((key, value) -> false);
+    }
+
     public double getMoveX() {
         double moveX = 0;
 

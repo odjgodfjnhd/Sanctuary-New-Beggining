@@ -137,7 +137,7 @@
   <object id="14" name="entrance_from_level2" type="PLAYER_SPAWN" x="795" y="95" width="37" height="34"/>
   <object id="15" type="NPC" x="738" y="177" width="26" height="45">
    <properties>
-    <property name="dialogue" value="Hello, junk!"/>
+    <property name="dialogue" value="Hello, junk! | You are new here? | Just walk around and look what a great world we have here... hehe..."/>
     <property name="name" value="mystreious_fridge"/>
    </properties>
   </object>

@@ -46,6 +46,7 @@ public class SanctuaryApp extends GameApplication {
     protected void initGame() {
         FXGL.getGameScene().setBackgroundColor(Color.BLACK);
 
+        gameContext.getServices().initialize();
         gameContext.getServices().getMapService().loadCurrentMap();
 
         bindCameraToCurrentMap();
