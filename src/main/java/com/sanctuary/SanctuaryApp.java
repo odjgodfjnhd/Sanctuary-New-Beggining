@@ -9,6 +9,7 @@ import com.sanctuary.config.GameConfig;
 import com.sanctuary.entity.EntityType;
 import com.sanctuary.game.GameBootstrap;
 import com.sanctuary.game.GameContext;
+import com.sanctuary.ui.SanctuaryGameMenu;
 import com.sanctuary.ui.SanctuaryMenu;
 import com.sanctuary.world.TransitionComponent;
 import javafx.scene.paint.Color;
@@ -33,6 +34,14 @@ public class SanctuaryApp extends GameApplication {
             @Override
             public FXGLMenu newMainMenu() {
                 return new SanctuaryMenu();
+            }
+
+            @NotNull
+            @Override
+            public FXGLMenu newGameMenu() {
+                return new SanctuaryGameMenu(
+                        () -> gameContext.getServices().getAudioService().stopBackgroundMusic()
+                );
             }
         });
     }

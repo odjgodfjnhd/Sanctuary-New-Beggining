@@ -1,5 +1,6 @@
 package com.sanctuary.game;
 
+import com.sanctuary.audio.AudioService;
 import com.sanctuary.core.GameService;
 import com.sanctuary.dialogue.DialogueService;
 import com.sanctuary.interaction.InteractionService;
@@ -16,17 +17,20 @@ public final class GameServices implements GameService {
     private final TransitionService transitionService;
     private final InteractionService interactionService;
     private final DialogueService dialogueService;
+    private final AudioService audioService;
 
     public GameServices(
             MapService mapService,
             TransitionService transitionService,
             InteractionService interactionService,
-            DialogueService dialogueService
+            DialogueService dialogueService,
+            AudioService audioService
     ) {
         this.mapService = mapService;
         this.transitionService = transitionService;
         this.interactionService = interactionService;
         this.dialogueService = dialogueService;
+        this.audioService = audioService;
     }
 
     @Override
@@ -57,12 +61,17 @@ public final class GameServices implements GameService {
         return dialogueService;
     }
 
+    public AudioService getAudioService() {
+        return audioService;
+    }
+
     private List<GameService> services() {
         return List.of(
                 mapService,
                 transitionService,
                 interactionService,
-                dialogueService
+                dialogueService,
+                audioService
         );
     }
 }

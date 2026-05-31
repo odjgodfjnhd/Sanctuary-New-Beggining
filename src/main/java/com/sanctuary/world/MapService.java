@@ -2,6 +2,7 @@ package com.sanctuary.world;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.sanctuary.config.GameConfig;
 import com.sanctuary.config.PlayerConfig;
 import com.sanctuary.core.GameService;
 import com.sanctuary.entity.EntityType;
@@ -12,8 +13,11 @@ import com.sanctuary.game.GameSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class MapService implements GameService {
+
+    private static final Logger LOGGER = Logger.getLogger(MapService.class.getName());
 
     private final GameSession session;
     private final MapProvider mapProvider;
@@ -23,6 +27,18 @@ public class MapService implements GameService {
     public MapService(GameSession session, MapProvider mapProvider) {
         this.session = session;
         this.mapProvider = mapProvider;
+    }
+
+    @Override
+    public void initialize() {
+        entityFactoryRegistered = false;
+        LOGGER.info("MapService initialized. Entity factory registration flag was reset.");
+    }
+
+    @Override
+    public void dispose() {
+        entityFactoryRegistered = false;
+        LOGGER.info("MapService disposed. Entity factory registration flag was reset.");
     }
 
     public void loadCurrentMap() {
@@ -71,21 +87,34 @@ public class MapService implements GameService {
     }
 
     private void ensureEntityFactoryRegistered() {
-        if (!entityFactoryRegistered) {
-            FXGL.getGameWorld().addEntityFactory(new GameEntityFactory());
-            entityFactoryRegistered = true;
+        if (entityFactoryRegistered) {
+            return;
         }
+
+        FXGL.getGameWorld().addEntityFactory(new GameEntityFactory());
+        entityFactoryRegistered = true;
+
+        LOGGER.info("GameEntityFactory was registered in current GameWorld.");
     }
 
     private SpawnPoint resolveSpawnPoint(WorldMap worldMap, String spawnId) {
         if (spawnId != null && !spawnId.isBlank()) {
             SpawnPoint requestedSpawn = worldMap.getSpawnPoint(spawnId);
+
             if (requestedSpawn != null) {
                 return requestedSpawn;
             }
+
+            LOGGER.warning(() ->
+                    "Requested spawn point was not found: "
+                            + spawnId
+                            + ". Map: "
+                            + worldMap.getMapId()
+            );
         }
 
-        SpawnPoint defaultSpawn = worldMap.getSpawnPoint("player_spawn");
+        SpawnPoint defaultSpawn = worldMap.getSpawnPoint(GameConfig.DEFAULT_SPAWN_ID);
+
         if (defaultSpawn != null) {
             return defaultSpawn;
         }
