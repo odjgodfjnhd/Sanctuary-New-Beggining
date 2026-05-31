@@ -17,13 +17,21 @@ public class SettingsService implements GameService {
     private static final String DISABLED_FULLSCREEN_EXIT_HINT = "";
 
     private final AudioService audioService;
+    private final UserSettingsRepository userSettingsRepository;
 
-    private DisplayMode displayMode = GameConfig.FULLSCREEN_FROM_START
-            ? DisplayMode.FULLSCREEN
-            : DisplayMode.WINDOWED;
+    private DisplayMode displayMode;
 
-    public SettingsService(AudioService audioService) {
+    public SettingsService(
+            AudioService audioService,
+            UserSettingsRepository userSettingsRepository
+    ) {
         this.audioService = audioService;
+        this.userSettingsRepository = userSettingsRepository;
+
+        UserSettingsData settingsData = userSettingsRepository.loadOrDefault();
+
+        displayMode = settingsData.displayMode();
+        audioService.setMusicVolume(settingsData.musicVolume());
     }
 
     @Override
@@ -38,6 +46,7 @@ public class SettingsService implements GameService {
 
         this.displayMode = displayMode;
         applyDisplayModeSafely();
+        saveUserSettings();
 
         LOGGER.info(() -> "Display mode changed to: " + displayMode);
     }
@@ -54,8 +63,13 @@ public class SettingsService implements GameService {
         return displayMode;
     }
 
+    public void previewMusicVolume(double volume) {
+        audioService.setMusicVolume(volume);
+    }
+
     public void setMusicVolume(double volume) {
         audioService.setMusicVolume(volume);
+        saveUserSettings();
 
         LOGGER.info(() -> "Music volume changed to: " + audioService.getMusicVolume());
     }
@@ -65,6 +79,10 @@ public class SettingsService implements GameService {
     }
 
     public boolean shouldStartFullscreen() {
+        if (displayMode == null) {
+            return GameConfig.FULLSCREEN_FROM_START;
+        }
+
         return isFullscreen();
     }
 
@@ -83,5 +101,12 @@ public class SettingsService implements GameService {
         stage.setFullScreenExitHint(DISABLED_FULLSCREEN_EXIT_HINT);
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         stage.setFullScreen(isFullscreen());
+    }
+
+    private void saveUserSettings() {
+        userSettingsRepository.save(new UserSettingsData(
+                displayMode,
+                audioService.getMusicVolume()
+        ));
     }
 }
