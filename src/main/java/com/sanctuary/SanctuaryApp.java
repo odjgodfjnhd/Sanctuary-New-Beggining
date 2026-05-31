@@ -27,14 +27,18 @@ public class SanctuaryApp extends GameApplication {
         settings.setVersion(GameConfig.VERSION);
         settings.setMainMenuEnabled(GameConfig.MAIN_MENU_ENABLED);
         settings.setFullScreenAllowed(GameConfig.FULLSCREEN_ALLOWED);
-        settings.setFullScreenFromStart(GameConfig.FULLSCREEN_FROM_START);
+        settings.setFullScreenFromStart(
+                gameContext.getServices().getSettingsService().shouldStartFullscreen()
+        );
 
         settings.setSceneFactory(new SceneFactory() {
             @NotNull
             @Override
             public FXGLMenu newMainMenu() {
                 return new SanctuaryMenu(
-                        gameContext.getServices().getSettingsService()
+                        gameContext.getSession(),
+                        gameContext.getServices().getSettingsService(),
+                        gameContext.getServices().getSaveService()
                 );
             }
 

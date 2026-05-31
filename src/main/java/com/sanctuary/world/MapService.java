@@ -19,6 +19,8 @@ public class MapService implements GameService {
 
     private static final Logger LOGGER = Logger.getLogger(MapService.class.getName());
 
+    private static final String SAVED_POSITION_SPAWN_ID = "saved_position";
+
     private final GameSession session;
     private final MapProvider mapProvider;
 
@@ -68,6 +70,8 @@ public class MapService implements GameService {
             player.setPosition(spawnPoint.getX(), spawnPoint.getY());
         }
 
+        session.clearRequestedPlayerPosition();
+
         configurePlayerBounds(player, worldMap);
     }
 
@@ -98,6 +102,14 @@ public class MapService implements GameService {
     }
 
     private SpawnPoint resolveSpawnPoint(WorldMap worldMap, String spawnId) {
+        if (session.hasRequestedPlayerPosition()) {
+            return new SpawnPoint(
+                    SAVED_POSITION_SPAWN_ID,
+                    session.getRequestedPlayerX(),
+                    session.getRequestedPlayerY()
+            );
+        }
+
         if (spawnId != null && !spawnId.isBlank()) {
             SpawnPoint requestedSpawn = worldMap.getSpawnPoint(spawnId);
 
