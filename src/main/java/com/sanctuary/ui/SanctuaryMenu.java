@@ -2,6 +2,7 @@ package com.sanctuary.ui;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
+import com.sanctuary.settings.SettingsService;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -20,57 +21,66 @@ public class SanctuaryMenu extends FXGLMenu {
     private static final String MENU_CSS_PATH = "/assets/ui/css/menu.css";
     private static final String MENU_BUTTON_STYLE_CLASS = "menu-button";
 
-    private static final int MENU_BUTTON_WIDTH = 200;
-    private static final int MENU_BUTTON_HEIGHT = 50;
+    private static final int MENU_BUTTON_WIDTH = 220;
+    private static final int MENU_BUTTON_HEIGHT = 52;
 
-    private static final int SMALL_BUTTON_WIDTH = 200;
-    private static final int SMALL_BUTTON_HEIGHT = 40;
+    private final SettingsService settingsService;
 
-    public SanctuaryMenu() {
+    public SanctuaryMenu(SettingsService settingsService) {
         super(MenuType.MAIN_MENU);
+
+        this.settingsService = settingsService;
 
         loadStylesheet();
         showMainMenu();
     }
 
     private void loadStylesheet() {
-        String cssResource = Objects.requireNonNull(getClass().getResource(MENU_CSS_PATH)).toExternalForm();
+        String cssResource = Objects.requireNonNull(
+                getClass().getResource(MENU_CSS_PATH),
+                "Main menu stylesheet not found: " + MENU_CSS_PATH
+        ).toExternalForm();
+
         getContentRoot().getStylesheets().add(cssResource);
     }
 
     private void showMainMenu() {
         getContentRoot().getChildren().clear();
 
-        Rectangle bg = new Rectangle(getAppWidth(), getAppHeight(), Color.DARKBLUE);
+        Rectangle background = new Rectangle(getAppWidth(), getAppHeight(), Color.rgb(
+                4,
+                8,
+                28
+        ));
 
         Text titleText = new Text("Sanctuary");
-        titleText.setFont(Font.font(48));
-        titleText.setFill(Color.GOLD);
-        titleText.setTranslateX((double) getAppWidth() / 2 - 150);
-        titleText.setTranslateY(150);
+        titleText.setFont(Font.font(54));
+        titleText.getStyleClass().add("menu-title");
+        titleText.setTranslateX((double) getAppWidth() / 2 - 155);
+        titleText.setTranslateY(140);
 
         Text subtitleText = new Text("The New Beginning");
         subtitleText.setFont(Font.font(24));
-        subtitleText.setFill(Color.LIGHTGOLDENRODYELLOW);
-        subtitleText.setTranslateX((double) getAppWidth() / 2 - 100);
-        subtitleText.setTranslateY(190);
+        subtitleText.getStyleClass().add("menu-subtitle");
+        subtitleText.setTranslateX((double) getAppWidth() / 2 - 112);
+        subtitleText.setTranslateY(178);
 
-        Button newGameBtn = createMenuButton("Новая игра", this::fireNewGame);
-        Button optionsBtn = createMenuButton("Настройки", this::showOptions);
-        Button exitBtn = createMenuButton("Выход", this::fireExit);
+        Button newGameButton = createMenuButton("Новая игра", this::fireNewGame);
+        Button settingsButton = createMenuButton("Настройки", this::showSettings);
+        Button exitButton = createMenuButton("Выход", this::fireExit);
 
-        VBox menuBox = new VBox(20, newGameBtn, optionsBtn, exitBtn);
+        VBox menuBox = new VBox(20, newGameButton, settingsButton, exitButton);
         menuBox.setAlignment(Pos.CENTER);
-        menuBox.setTranslateX((double) getAppWidth() / 2 - 100);
-        menuBox.setTranslateY((double) getAppHeight() / 2 - 100);
+        menuBox.setTranslateX((double) getAppWidth() / 2 - 110);
+        menuBox.setTranslateY((double) getAppHeight() / 2 - 75);
 
-        getContentRoot().getChildren().addAll(bg, titleText, subtitleText, menuBox);
+        getContentRoot().getChildren().addAll(background, titleText, subtitleText, menuBox);
     }
 
     private Button createMenuButton(String text, Runnable action) {
         Button button = new Button(text);
 
-        button.setFont(Font.font(24));
+        button.setFont(Font.font(23));
         button.setPrefSize(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
         button.getStyleClass().add(MENU_BUTTON_STYLE_CLASS);
         button.setOnAction(event -> action.run());
@@ -78,38 +88,14 @@ public class SanctuaryMenu extends FXGLMenu {
         return button;
     }
 
-    private Button createSmallButton(String text, Runnable action) {
-        Button button = new Button(text);
-
-        button.setFont(Font.font(20));
-        button.setPrefSize(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT);
-        button.getStyleClass().add(MENU_BUTTON_STYLE_CLASS);
-        button.setOnAction(event -> action.run());
-
-        return button;
-    }
-
-    private void showOptions() {
+    private void showSettings() {
         getContentRoot().getChildren().clear();
 
-        Rectangle bg = new Rectangle(getAppWidth(), getAppHeight(), Color.DARKGRAY);
+        SettingsView settingsView = new SettingsView(
+                settingsService,
+                this::showMainMenu
+        );
 
-        Text titleText = new Text("Настройки");
-        titleText.setFont(Font.font(36));
-        titleText.setFill(Color.WHITE);
-        titleText.setTranslateX((double) getAppWidth() / 2 - 100);
-        titleText.setTranslateY(150);
-
-        Text infoText = new Text("Здесь будут настройки:\n- Громкость\n- Управление\n- Графика");
-        infoText.setFont(Font.font(18));
-        infoText.setFill(Color.LIGHTGRAY);
-        infoText.setTranslateX((double) getAppWidth() / 2 - 150);
-        infoText.setTranslateY(220);
-
-        Button backBtn = createSmallButton("← Вернуться в меню", this::showMainMenu);
-        backBtn.setTranslateX((double) getAppWidth() / 2 - 100);
-        backBtn.setTranslateY(300);
-
-        getContentRoot().getChildren().addAll(bg, titleText, infoText, backBtn);
+        getContentRoot().getChildren().add(settingsView.getRoot());
     }
 }

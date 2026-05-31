@@ -33,13 +33,16 @@ public class SanctuaryApp extends GameApplication {
             @NotNull
             @Override
             public FXGLMenu newMainMenu() {
-                return new SanctuaryMenu();
+                return new SanctuaryMenu(
+                        gameContext.getServices().getSettingsService()
+                );
             }
 
             @NotNull
             @Override
             public FXGLMenu newGameMenu() {
                 return new SanctuaryGameMenu(
+                        gameContext.getServices().getSettingsService(),
                         () -> gameContext.getServices().getAudioService().stopBackgroundMusic()
                 );
             }
