@@ -12,8 +12,8 @@ import com.sanctuary.save.SaveService;
 
 import java.util.Comparator;
 import java.util.Optional;
-import java.util.stream.Stream;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class InteractionService implements GameService {
 
@@ -97,11 +97,7 @@ public class InteractionService implements GameService {
 
     private void restAtPoint(RestPointComponent restPointComponent) {
         saveService.saveCurrentGame();
-
-        dialogueService.startDialogue(
-                restPointComponent.getName(),
-                restPointComponent.getDialogue()
-        );
+        dialogueService.startDialogue(restPointComponent.getDialogueScript());
     }
 
     private double distanceBetween(Entity first, Entity second) {

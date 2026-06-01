@@ -2,49 +2,43 @@ package com.sanctuary.game;
 
 import com.almasb.fxgl.entity.Entity;
 import com.sanctuary.config.GameConfig;
+import com.sanctuary.game.playerstart.PlayerStartRequest;
+import com.sanctuary.game.playerstart.SavedPositionStartRequest;
+import com.sanctuary.game.playerstart.SpawnPointStartRequest;
 import com.sanctuary.save.GameSaveData;
 import com.sanctuary.world.SpawnPoint;
 import com.sanctuary.world.WorldMap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class GameSession {
 
-    private String currentMapId;
-    private String requestedSpawnId;
-    private Double requestedPlayerX;
-    private Double requestedPlayerY;
+    private String currentMapId = GameConfig.START_MAP_ID;
+    private PlayerStartRequest playerStartRequest =
+            new SpawnPointStartRequest(GameConfig.DEFAULT_SPAWN_ID);
+
     private SpawnPoint currentSpawnPoint;
     private WorldMap currentWorldMap;
     private Entity player;
     private final Map<String, Object> flags = new HashMap<>();
 
     public void prepareNewGame() {
-        clear();
+        resetRuntimeState();
 
         currentMapId = GameConfig.START_MAP_ID;
-        requestedSpawnId = GameConfig.DEFAULT_SPAWN_ID;
-        requestedPlayerX = null;
-        requestedPlayerY = null;
+        playerStartRequest = new SpawnPointStartRequest(GameConfig.DEFAULT_SPAWN_ID);
     }
 
     public void prepareSavedGame(GameSaveData saveData) {
-        clear();
+        resetRuntimeState();
 
         currentMapId = saveData.mapId();
-        requestedSpawnId = null;
-        requestedPlayerX = saveData.playerX();
-        requestedPlayerY = saveData.playerY();
-    }
-
-    public boolean hasRequestedPlayerPosition() {
-        return requestedPlayerX != null && requestedPlayerY != null;
-    }
-
-    public void clearRequestedPlayerPosition() {
-        requestedPlayerX = null;
-        requestedPlayerY = null;
+        playerStartRequest = new SavedPositionStartRequest(
+                saveData.playerX(),
+                saveData.playerY()
+        );
     }
 
     public String getCurrentMapId() {
@@ -52,25 +46,35 @@ public class GameSession {
     }
 
     public void setCurrentMapId(String currentMapId) {
+        if (currentMapId == null || currentMapId.isBlank()) {
+            throw new IllegalArgumentException("Current map id must not be blank");
+        }
+
         this.currentMapId = currentMapId;
     }
 
-    public String getRequestedSpawnId() {
-        return requestedSpawnId;
+    public PlayerStartRequest getPlayerStartRequest() {
+        return playerStartRequest;
     }
 
-    public void setRequestedSpawnId(String requestedSpawnId) {
-        this.requestedSpawnId = requestedSpawnId;
-        this.requestedPlayerX = null;
-        this.requestedPlayerY = null;
+    public void setPlayerStartRequest(PlayerStartRequest playerStartRequest) {
+        if (playerStartRequest == null) {
+            throw new IllegalArgumentException("Player start request must not be null");
+        }
+
+        this.playerStartRequest = playerStartRequest;
     }
 
-    public Double getRequestedPlayerX() {
-        return requestedPlayerX;
+    public void setRequestedSpawnId(String spawnId) {
+        setPlayerStartRequest(new SpawnPointStartRequest(spawnId));
     }
 
-    public Double getRequestedPlayerY() {
-        return requestedPlayerY;
+    public Optional<String> getRequestedSpawnId() {
+        if (playerStartRequest instanceof SpawnPointStartRequest spawnPointStartRequest) {
+            return Optional.of(spawnPointStartRequest.spawnId());
+        }
+
+        return Optional.empty();
     }
 
     public SpawnPoint getCurrentSpawnPoint() {
@@ -114,13 +118,15 @@ public class GameSession {
     }
 
     public void clear() {
-        currentMapId = null;
-        requestedSpawnId = null;
-        requestedPlayerX = null;
-        requestedPlayerY = null;
+        currentMapId = GameConfig.START_MAP_ID;
+        playerStartRequest = new SpawnPointStartRequest(GameConfig.DEFAULT_SPAWN_ID);
+        resetRuntimeState();
+        flags.clear();
+    }
+
+    private void resetRuntimeState() {
         currentSpawnPoint = null;
         currentWorldMap = null;
         player = null;
-        flags.clear();
     }
 }

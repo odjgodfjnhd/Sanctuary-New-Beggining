@@ -10,6 +10,9 @@ import com.sanctuary.entity.factory.GameEntityFactory;
 import com.sanctuary.entity.player.MovementComponent;
 import com.sanctuary.entity.player.Player;
 import com.sanctuary.game.GameSession;
+import com.sanctuary.game.playerstart.PlayerStartRequest;
+import com.sanctuary.game.playerstart.SavedPositionStartRequest;
+import com.sanctuary.game.playerstart.SpawnPointStartRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +48,6 @@ public class MapService implements GameService {
 
     public void loadCurrentMap() {
         String mapId = session.getCurrentMapId();
-        String spawnId = session.getRequestedSpawnId();
 
         if (mapId == null || mapId.isBlank()) {
             throw new IllegalStateException("Current map id is not set");
@@ -58,7 +60,7 @@ public class MapService implements GameService {
         ensureEntityFactoryRegistered();
         mapProvider.loadIntoWorld(worldMap);
 
-        SpawnPoint spawnPoint = resolveSpawnPoint(worldMap, spawnId);
+        SpawnPoint spawnPoint = resolveStartPoint(worldMap, session.getPlayerStartRequest());
         session.setCurrentSpawnPoint(spawnPoint);
 
         Entity player = session.getPlayer();
@@ -69,8 +71,6 @@ public class MapService implements GameService {
         } else {
             player.setPosition(spawnPoint.getX(), spawnPoint.getY());
         }
-
-        session.clearRequestedPlayerPosition();
 
         configurePlayerBounds(player, worldMap);
     }
@@ -101,29 +101,40 @@ public class MapService implements GameService {
         LOGGER.info("GameEntityFactory was registered in current GameWorld.");
     }
 
-    private SpawnPoint resolveSpawnPoint(WorldMap worldMap, String spawnId) {
-        if (session.hasRequestedPlayerPosition()) {
+    private SpawnPoint resolveStartPoint(
+            WorldMap worldMap,
+            PlayerStartRequest playerStartRequest
+    ) {
+        if (playerStartRequest instanceof SavedPositionStartRequest savedPositionStartRequest) {
             return new SpawnPoint(
                     SAVED_POSITION_SPAWN_ID,
-                    session.getRequestedPlayerX(),
-                    session.getRequestedPlayerY()
+                    savedPositionStartRequest.x(),
+                    savedPositionStartRequest.y()
             );
         }
 
-        if (spawnId != null && !spawnId.isBlank()) {
-            SpawnPoint requestedSpawn = worldMap.getSpawnPoint(spawnId);
-
-            if (requestedSpawn != null) {
-                return requestedSpawn;
-            }
-
-            LOGGER.warning(() ->
-                    "Requested spawn point was not found: "
-                            + spawnId
-                            + ". Map: "
-                            + worldMap.getMapId()
-            );
+        if (playerStartRequest instanceof SpawnPointStartRequest spawnPointStartRequest) {
+            return resolveSpawnPoint(worldMap, spawnPointStartRequest.spawnId());
         }
+
+        throw new IllegalStateException(
+                "Unsupported player start request: " + playerStartRequest.getClass().getName()
+        );
+    }
+
+    private SpawnPoint resolveSpawnPoint(WorldMap worldMap, String spawnId) {
+        SpawnPoint requestedSpawn = worldMap.getSpawnPoint(spawnId);
+
+        if (requestedSpawn != null) {
+            return requestedSpawn;
+        }
+
+        LOGGER.warning(() ->
+                "Requested spawn point was not found: "
+                        + spawnId
+                        + ". Map: "
+                        + worldMap.getMapId()
+        );
 
         SpawnPoint defaultSpawn = worldMap.getSpawnPoint(GameConfig.DEFAULT_SPAWN_ID);
 

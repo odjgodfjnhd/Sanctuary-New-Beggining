@@ -48,6 +48,13 @@ public class DialogueService implements GameService {
         showCurrentLine();
     }
 
+    public void startDialogue(DialogueScript dialogueScript) {
+        startDialogue(
+                dialogueScript.speakerName(),
+                dialogueScript.toRawText(config.lineSeparator())
+        );
+    }
+
     public void advance() {
         switch (state) {
             case PRINTING -> skipAnimation();
