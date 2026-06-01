@@ -2,6 +2,7 @@ package com.sanctuary.ui;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
+import com.sanctuary.settings.SettingsService;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -34,11 +35,16 @@ public class SanctuaryGameMenu extends FXGLMenu {
     private static final double MIN_MENU_SPACING = 16.0;
     private static final double MAX_MENU_SPACING = 26.0;
 
+    private final SettingsService settingsService;
     private final Runnable returnToMainMenuAction;
 
-    public SanctuaryGameMenu(Runnable returnToMainMenuAction) {
+    public SanctuaryGameMenu(
+            SettingsService settingsService,
+            Runnable returnToMainMenuAction
+    ) {
         super(MenuType.GAME_MENU);
 
+        this.settingsService = settingsService;
         this.returnToMainMenuAction = returnToMainMenuAction;
 
         loadStylesheet();
@@ -63,6 +69,7 @@ public class SanctuaryGameMenu extends FXGLMenu {
         titleText.getStyleClass().add(GAME_MENU_TITLE_STYLE_CLASS);
 
         Button resumeButton = createMenuButton("Продолжить", this::fireResume);
+        Button settingsButton = createMenuButton("Настройки", this::showSettings);
         Button mainMenuButton = createMenuButton("В главное меню", this::returnToMainMenu);
         Button exitButton = createMenuButton("Выход", this::fireExit);
 
@@ -70,6 +77,7 @@ public class SanctuaryGameMenu extends FXGLMenu {
                 getMenuSpacing(),
                 titleText,
                 resumeButton,
+                settingsButton,
                 mainMenuButton,
                 exitButton
         );
@@ -96,6 +104,17 @@ public class SanctuaryGameMenu extends FXGLMenu {
         button.setOnAction(event -> action.run());
 
         return button;
+    }
+
+    private void showSettings() {
+        getContentRoot().getChildren().clear();
+
+        SettingsView settingsView = new SettingsView(
+                settingsService,
+                this::showGameMenu
+        );
+
+        getContentRoot().getChildren().add(settingsView.getRoot());
     }
 
     private double getButtonWidth() {

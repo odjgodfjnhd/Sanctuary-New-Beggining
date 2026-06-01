@@ -1,3 +1,11 @@
+.main-menu-background {
+    -fx-fill: #04081c;
+}
+
+.main-menu-container {
+    -fx-alignment: center;
+}
+
 .menu-button {
     -fx-background-color: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
     -fx-text-fill: white;
@@ -16,6 +24,19 @@
     -fx-border-width: 3;
 }
 
+.menu-title {
+    -fx-fill: gold;
+    -fx-font-size: 54px;
+    -fx-font-weight: bold;
+    -fx-stroke: #32004b;
+    -fx-stroke-width: 1.2;
+}
+
+.menu-subtitle {
+    -fx-fill: #f5e8a8;
+    -fx-font-size: 24px;
+}
+
 .game-menu-overlay {
     -fx-fill: rgba(0, 0, 0, 0.72);
 }
@@ -30,4 +51,57 @@
     -fx-font-weight: bold;
     -fx-stroke: #32004b;
     -fx-stroke-width: 1.2;
+}
+
+.settings-panel {
+    -fx-background-color: rgba(10, 18, 45, 0.88);
+    -fx-background-radius: 24;
+    -fx-border-color: #00d2ff;
+    -fx-border-width: 3;
+    -fx-border-radius: 24;
+    -fx-padding: 28;
+    -fx-effect: dropshadow(gaussian, rgba(0, 210, 255, 0.55), 28, 0.25, 0, 0);
+}
+
+.settings-label {
+    -fx-text-fill: gold;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.settings-value-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-min-width: 48;
+}
+
+.settings-checkbox {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.settings-checkbox .box {
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: #00d2ff;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.settings-checkbox:selected .mark {
+    -fx-background-color: gold;
+}
+
+.settings-slider .track {
+    -fx-background-color: #22223b;
+    -fx-background-radius: 8;
+    -fx-pref-height: 8;
+}
+
+.settings-slider .thumb {
+    -fx-background-color: gold;
+    -fx-background-radius: 12;
+    -fx-pref-width: 18;
+    -fx-pref-height: 18;
 }
