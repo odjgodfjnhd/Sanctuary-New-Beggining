@@ -6,13 +6,14 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class AudioService implements GameService {
 
     private static final Logger LOGGER = Logger.getLogger(AudioService.class.getName());
 
-    private MediaPlayer backgroundMusicPlayer;
+    private Optional<MediaPlayer> backgroundMusicPlayer = Optional.empty();
     private double musicVolume = AudioConfig.DEFAULT_MUSIC_VOLUME;
 
     @Override
@@ -38,41 +39,44 @@ public class AudioService implements GameService {
         }
 
         Media media = new Media(musicResource.toExternalForm());
-        backgroundMusicPlayer = new MediaPlayer(media);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-        backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        backgroundMusicPlayer.setVolume(musicVolume);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(musicVolume);
 
-        backgroundMusicPlayer.setOnReady(() ->
+        mediaPlayer.setOnReady(() ->
                 LOGGER.info(() -> "Background music started: " + track.getResourcePath())
         );
 
-        backgroundMusicPlayer.setOnError(() ->
-                LOGGER.warning(() -> "Background music error: "
-                        + backgroundMusicPlayer.getError())
+        mediaPlayer.setOnError(() ->
+                LOGGER.warning(() -> "Background music error: " + mediaPlayer.getError())
         );
 
-        backgroundMusicPlayer.play();
+        backgroundMusicPlayer = Optional.of(mediaPlayer);
+        mediaPlayer.play();
     }
 
     public void stopBackgroundMusic() {
-        if (backgroundMusicPlayer == null) {
+        if (backgroundMusicPlayer.isEmpty()) {
             return;
         }
 
-        backgroundMusicPlayer.stop();
-        backgroundMusicPlayer.dispose();
-        backgroundMusicPlayer = null;
+        backgroundMusicPlayer.ifPresent(mediaPlayer -> {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        });
+
+        backgroundMusicPlayer = Optional.empty();
 
         LOGGER.info("Background music stopped");
     }
 
     public void setMusicVolume(double volume) {
-        musicVolume = clamp(volume, 0.0, 1.0);
+        musicVolume = clampMusicVolume(volume);
 
-        if (backgroundMusicPlayer != null) {
-            backgroundMusicPlayer.setVolume(musicVolume);
-        }
+        backgroundMusicPlayer.ifPresent(mediaPlayer ->
+                mediaPlayer.setVolume(musicVolume)
+        );
     }
 
     public double getMusicVolume() {
@@ -80,11 +84,15 @@ public class AudioService implements GameService {
     }
 
     public boolean isBackgroundMusicPlaying() {
-        return backgroundMusicPlayer != null
-                && backgroundMusicPlayer.getStatus() == MediaPlayer.Status.PLAYING;
+        return backgroundMusicPlayer
+                .map(mediaPlayer -> mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING)
+                .orElse(false);
     }
 
-    private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
+    private double clampMusicVolume(double volume) {
+        return Math.max(
+                AudioConfig.MIN_MUSIC_VOLUME,
+                Math.min(AudioConfig.MAX_MUSIC_VOLUME, volume)
+        );
     }
 }

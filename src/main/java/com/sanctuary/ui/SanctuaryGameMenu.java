@@ -5,9 +5,7 @@ import com.almasb.fxgl.app.scene.MenuType;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.Objects;
@@ -18,10 +16,23 @@ import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 public class SanctuaryGameMenu extends FXGLMenu {
 
     private static final String MENU_CSS_PATH = "/assets/ui/css/menu.css";
-    private static final String MENU_BUTTON_STYLE_CLASS = "menu-button";
 
-    private static final int MENU_BUTTON_WIDTH = 260;
-    private static final int MENU_BUTTON_HEIGHT = 50;
+    private static final String MENU_BUTTON_STYLE_CLASS = "menu-button";
+    private static final String GAME_MENU_OVERLAY_STYLE_CLASS = "game-menu-overlay";
+    private static final String GAME_MENU_CONTAINER_STYLE_CLASS = "game-menu-container";
+    private static final String GAME_MENU_TITLE_STYLE_CLASS = "game-menu-title";
+
+    private static final double BUTTON_WIDTH_RATIO = 0.28;
+    private static final double BUTTON_HEIGHT_RATIO = 0.065;
+
+    private static final double MIN_BUTTON_WIDTH = 240.0;
+    private static final double MAX_BUTTON_WIDTH = 340.0;
+    private static final double MIN_BUTTON_HEIGHT = 46.0;
+    private static final double MAX_BUTTON_HEIGHT = 58.0;
+
+    private static final double MENU_SPACING_RATIO = 0.03;
+    private static final double MIN_MENU_SPACING = 16.0;
+    private static final double MAX_MENU_SPACING = 26.0;
 
     private final Runnable returnToMainMenuAction;
 
@@ -46,40 +57,73 @@ public class SanctuaryGameMenu extends FXGLMenu {
     private void showGameMenu() {
         getContentRoot().getChildren().clear();
 
-        Rectangle background = new Rectangle(getAppWidth(), getAppHeight(), Color.rgb(
-                0,
-                0,
-                0,
-                0.72
-        ));
+        Rectangle overlay = createOverlay();
 
         Text titleText = new Text("Pause");
-        titleText.setFont(Font.font(44));
-        titleText.setFill(Color.GOLD);
-        titleText.setTranslateX((double) getAppWidth() / 2 - 70);
-        titleText.setTranslateY(160);
+        titleText.getStyleClass().add(GAME_MENU_TITLE_STYLE_CLASS);
 
         Button resumeButton = createMenuButton("Продолжить", this::fireResume);
         Button mainMenuButton = createMenuButton("В главное меню", this::returnToMainMenu);
         Button exitButton = createMenuButton("Выход", this::fireExit);
 
-        VBox menuBox = new VBox(20, resumeButton, mainMenuButton, exitButton);
-        menuBox.setAlignment(Pos.CENTER);
-        menuBox.setTranslateX((double) getAppWidth() / 2 - 130);
-        menuBox.setTranslateY((double) getAppHeight() / 2 - 80);
+        VBox menuContainer = new VBox(
+                getMenuSpacing(),
+                titleText,
+                resumeButton,
+                mainMenuButton,
+                exitButton
+        );
 
-        getContentRoot().getChildren().addAll(background, titleText, menuBox);
+        menuContainer.setAlignment(Pos.CENTER);
+        menuContainer.setPrefSize(getAppWidth(), getAppHeight());
+        menuContainer.getStyleClass().add(GAME_MENU_CONTAINER_STYLE_CLASS);
+
+        getContentRoot().getChildren().addAll(overlay, menuContainer);
+    }
+
+    private Rectangle createOverlay() {
+        Rectangle overlay = new Rectangle(getAppWidth(), getAppHeight());
+        overlay.getStyleClass().add(GAME_MENU_OVERLAY_STYLE_CLASS);
+
+        return overlay;
     }
 
     private Button createMenuButton(String text, Runnable action) {
         Button button = new Button(text);
 
-        button.setFont(Font.font(22));
-        button.setPrefSize(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
+        button.setPrefSize(getButtonWidth(), getButtonHeight());
         button.getStyleClass().add(MENU_BUTTON_STYLE_CLASS);
         button.setOnAction(event -> action.run());
 
         return button;
+    }
+
+    private double getButtonWidth() {
+        return clamp(
+                getAppWidth() * BUTTON_WIDTH_RATIO,
+                MIN_BUTTON_WIDTH,
+                MAX_BUTTON_WIDTH
+        );
+    }
+
+    private double getButtonHeight() {
+        return clamp(
+                getAppHeight() * BUTTON_HEIGHT_RATIO,
+                MIN_BUTTON_HEIGHT,
+                MAX_BUTTON_HEIGHT
+        );
+    }
+
+    private double getMenuSpacing() {
+        return clamp(
+                getAppHeight() * MENU_SPACING_RATIO,
+                MIN_MENU_SPACING,
+                MAX_MENU_SPACING
+        );
+    }
+
+    private double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     private void returnToMainMenu() {

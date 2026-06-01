@@ -1,10 +1,11 @@
 package com.sanctuary.audio;
 
 import com.sanctuary.config.AssetPaths;
+import com.sanctuary.config.AudioConfig;
 
 public enum MusicTrack {
 
-    MAIN_THEME("main_theme.mp3");
+    MAIN_THEME(AudioConfig.MAIN_THEME_FILE_NAME);
 
     private final String fileName;
 
