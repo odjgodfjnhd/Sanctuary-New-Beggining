@@ -1,3 +1,11 @@
+.main-menu-background {
+    -fx-fill: #04081c;
+}
+
+.main-menu-container {
+    -fx-alignment: center;
+}
+
 .menu-button {
     -fx-background-color: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
     -fx-text-fill: white;
@@ -18,12 +26,15 @@
 
 .menu-title {
     -fx-fill: gold;
+    -fx-font-size: 54px;
+    -fx-font-weight: bold;
     -fx-stroke: #32004b;
     -fx-stroke-width: 1.2;
 }
 
 .menu-subtitle {
     -fx-fill: #f5e8a8;
+    -fx-font-size: 24px;
 }
 
 .game-menu-overlay {
