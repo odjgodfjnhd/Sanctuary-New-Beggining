@@ -1,5 +1,6 @@
 package com.sanctuary.game;
 
+import com.sanctuary.audio.AudioService;
 import com.sanctuary.camera.CameraController;
 import com.sanctuary.config.DialogueConfig;
 import com.sanctuary.config.DialogueConfigLoader;
@@ -26,6 +27,8 @@ public class GameBootstrap {
         MapService mapService = new MapService(session, mapProvider);
         TransitionService transitionService = new TransitionService();
         DialogueService dialogueService = new DialogueService(dialogueConfig);
+        AudioService audioService = new AudioService();
+
         InteractionService interactionService = new InteractionService(
                 session,
                 dialogueService
@@ -42,7 +45,8 @@ public class GameBootstrap {
                 mapService,
                 transitionService,
                 interactionService,
-                dialogueService
+                dialogueService,
+                audioService
         );
 
         GameControllers controllers = new GameControllers(

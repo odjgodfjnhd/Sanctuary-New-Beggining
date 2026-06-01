@@ -16,7 +16,7 @@ public final class GameConfig {
 
     public static final boolean MAIN_MENU_ENABLED = true;
 
-    public static final String START_MAP_ID = "level1";
+    public static final String START_MAP_ID = "Forest";
     public static final String DEFAULT_SPAWN_ID = "player_spawn";
 
     public static final String SAVE_FILE_NAME = "sanctuary_save.dat";

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="left-up" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="36">
+ <tileset firstgid="1" name="fences and ladders etc" tilewidth="32" tileheight="32" tilecount="18" columns="6">
+  <image source="fences and ladders etc.png" width="192" height="119"/>
+ </tileset>
+ <tileset firstgid="19" name="premade_buildings_demo" tilewidth="32" tileheight="32" tilecount="256" columns="16">
+  <image source="premade_buildings_demo.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="275" name="TX Tileset Stone Ground" tilewidth="32" tileheight="32" tilecount="64" columns="8">
+  <image source="TX Tileset Stone Ground.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="339" name="TX Props with Shadow" tilewidth="32" tileheight="32" tilecount="256" columns="16">
+  <image source="TX Props with Shadow.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="595" name="rogues" tilewidth="32" tileheight="32" tilecount="49" columns="7">
+  <image source="rogues.png" width="224" height="224"/>
+ </tileset>
+ <tileset firstgid="644" name="TX Tileset Grass" tilewidth="32" tileheight="32" tilecount="64" columns="8">
+  <image source="TX Tileset Grass.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="708" name="TX Plant with Shadow" tilewidth="32" tileheight="32" tilecount="256" columns="16">
+  <image source="TX Plant with Shadow.png" width="512" height="512"/>
+ </tileset>
+ <layer id="1" name="floor" width="30" height="20">
+  <data encoding="csv">
+645,652,652,652,644,644,644,644,644,644,644,644,644,645,646,652,652,652,652,644,644,644,644,644,644,644,645,646,647,647,
+644,660,660,660,652,652,652,644,652,644,645,646,647,647,647,660,660,660,660,652,652,652,652,652,652,652,653,654,655,655,
+644,668,668,668,660,660,644,645,646,647,647,647,655,655,655,668,668,668,668,660,660,660,660,660,660,660,661,662,663,663,
+652,644,644,668,668,644,645,646,647,647,655,655,663,663,663,663,671,663,668,668,668,668,668,668,668,668,669,670,671,671,
+660,652,652,652,668,644,645,646,647,644,644,644,644,644,645,646,647,671,668,669,670,671,663,663,663,663,669,670,671,671,
+668,644,645,646,647,647,647,646,644,652,652,652,652,644,644,644,644,644,668,669,670,671,671,671,671,671,668,668,669,670,
+670,644,644,644,644,644,645,646,652,660,660,660,660,652,652,652,652,652,652,668,668,669,670,671,660,668,668,669,670,671,
+670,652,652,652,652,644,645,646,660,668,668,644,645,646,647,647,647,647,647,647,647,644,645,660,668,668,669,670,671,647,
+670,660,660,660,660,644,645,644,668,668,669,644,644,644,644,644,644,644,644,645,646,644,644,668,668,669,670,671,663,655,
+670,668,668,668,644,645,646,652,652,668,669,652,652,652,652,644,645,646,647,647,647,652,652,668,669,670,671,663,671,663,
+644,644,652,644,645,646,647,660,660,660,668,660,660,644,645,646,647,647,647,655,655,660,660,668,669,670,671,671,671,671,
+652,652,660,644,645,644,645,668,668,668,668,668,668,644,644,645,646,647,655,663,663,668,668,668,668,668,669,670,671,671,
+660,660,668,644,644,644,644,668,669,670,671,663,663,652,644,644,644,644,644,644,644,644,644,644,644,644,644,652,668,669,
+668,668,668,652,652,652,652,668,669,670,671,671,671,660,652,652,652,652,644,644,644,644,644,644,652,652,652,660,668,669,
+669,670,671,660,660,660,660,660,660,660,668,669,670,668,660,660,660,660,644,652,652,652,652,652,660,660,660,668,668,669,
+669,670,671,668,668,668,668,668,668,668,668,668,668,668,668,668,668,668,652,660,660,660,660,660,668,668,668,668,669,670,
+669,670,671,647,647,644,644,644,644,644,644,645,646,647,655,655,647,647,660,668,668,668,668,668,668,669,670,671,646,647,
+653,654,655,655,655,652,652,652,652,652,652,653,654,655,663,663,655,655,668,668,669,670,671,653,654,655,652,653,654,655,
+661,662,663,663,663,660,660,660,660,660,660,661,662,663,671,671,663,663,663,663,663,663,660,661,662,663,660,661,662,663,
+669,670,671,671,671,668,668,668,668,668,668,669,670,671,669,670,671,671,671,671,671,671,668,669,670,671,668,669,670,671
+</data>
+ </layer>
+ <layer id="2" name="roads" width="30" height="20">
+  <data encoding="csv">
+0,0,36,37,38,0,0,0,0,0,805,99,100,101,102,103,104,105,378,379,0,805,0,40,41,42,43,44,0,0,
+0,0,52,53,54,10,11,460,461,0,805,115,116,117,118,119,120,121,394,395,0,805,0,56,57,58,59,60,426,427,
+0,0,68,69,70,0,0,476,477,0,805,131,132,133,134,135,136,137,410,411,0,805,0,72,73,74,75,76,442,443,
+2,2,84,85,86,4,2,2,2,2,2,147,148,149,150,151,152,153,2,2,2,2,2,88,89,90,2,2,2,2,
+0,0,0,302,640,0,0,0,0,0,0,163,164,165,166,167,168,169,0,0,0,0,0,0,287,638,0,0,0,0,
+0,0,0,302,302,0,0,0,0,0,0,0,0,4,305,610,0,0,0,0,0,0,0,0,295,0,0,0,0,0,
+0,0,0,302,302,302,302,302,302,302,302,302,302,312,313,314,303,303,303,303,303,303,303,303,303,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,320,321,322,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,278,278,278,0,0,0,0,0,0,0,352,353,354,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,286,286,286,0,0,0,0,0,0,0,368,369,370,0,0,0,0,
+99,587,101,102,103,586,586,0,0,0,0,0,0,294,294,294,0,0,0,0,0,430,431,384,385,386,430,431,0,0,
+115,116,117,118,119,120,121,490,380,381,490,491,0,275,276,277,0,0,0,0,0,446,447,478,479,480,446,447,0,0,
+131,132,133,134,135,136,137,506,396,397,506,507,0,283,284,285,0,0,0,0,0,462,463,494,495,496,462,463,0,0,
+147,148,149,150,151,152,153,0,477,477,0,0,0,291,292,293,0,0,0,0,0,0,0,510,511,512,0,0,0,0,
+163,164,165,166,167,168,169,587,0,0,0,0,0,275,276,277,0,0,0,0,0,584,0,0,490,0,0,0,0,0,
+528,529,477,693,0,587,477,586,0,0,0,0,0,283,284,285,0,0,0,584,0,0,8,8,506,8,8,8,8,8,
+544,545,0,701,685,684,685,683,695,694,702,705,704,291,292,293,0,0,0,0,0,8,380,381,0,380,381,805,380,381,
+0,0,587,477,586,0,0,0,0,0,0,0,454,275,276,277,422,0,0,584,0,8,396,397,805,396,397,805,396,397,
+0,0,0,0,0,0,0,0,0,0,0,0,0,283,284,285,0,0,584,0,0,0,380,381,0,380,381,0,380,381,
+0,0,0,0,0,0,0,0,0,0,0,0,0,291,292,293,0,0,0,0,584,8,396,397,805,396,397,805,396,397
+</data>
+ </layer>
+ <objectgroup id="3" name="gameplay">
+  <object id="1" name="entranceFromForest" type="PLAYER_SPAWN" x="417" y="555" width="93" height="41"/>
+  <object id="2" name="TransitionToForest" type="MAP_TRANSITION" x="416" y="611" width="95" height="28">
+   <properties>
+    <property name="targetMap" value="Forest"/>
+    <property name="targetSpawn" value="entranceFromCity"/>
+   </properties>
+  </object>
+  <object id="3" type="NPC" x="125" y="125" width="36" height="35">
+   <properties>
+    <property name="dialogue" value="Get out from here! | This city is corrupted | *Wow, I need to be far from him, he's crazy*"/>
+    <property name="name" value="delusional elder"/>
+   </properties>
+  </object>
+  <object id="34" name="TransitionToMariaHouse" type="MAP_TRANSITION" x="769" y="120" width="31" height="11">
+   <properties>
+    <property name="targetMap" value="MariaHouse"/>
+    <property name="targetSpawn" value="entranceFromCity"/>
+   </properties>
+  </object>
+  <object id="35" name="entranceFromMariaHouse" type="PLAYER_SPAWN" x="765" y="143" width="36" height="28"/>
+ </objectgroup>
+ <objectgroup id="4" name="collision">
+  <object id="4" type="WALL" x="708" y="536" width="59" height="34"/>
+  <object id="5" type="WALL" x="833" y="366" width="29" height="42"/>
+  <object id="6" type="WALL" x="737" y="390" width="91" height="19"/>
+  <object id="7" type="WALL" x="774" y="366" width="21" height="70"/>
+  <object id="8" type="WALL" x="754" y="378" width="69" height="10"/>
+  <object id="9" type="WALL" x="746" y="411" width="76" height="13"/>
+  <object id="10" type="WALL" x="707" y="482" width="250" height="28"/>
+  <object id="11" type="WALL" x="804" y="539" width="60" height="30"/>
+  <object id="12" type="WALL" x="901" y="540" width="58" height="27"/>
+  <object id="13" type="WALL" x="902" y="605" width="56" height="26"/>
+  <object id="14" type="WALL" x="803" y="607" width="59" height="25"/>
+  <object id="15" type="WALL" x="710" y="601" width="56" height="32"/>
+  <object id="16" type="WALL" x="677" y="515" width="26" height="59"/>
+  <object id="17" type="WALL" x="677" y="609" width="24" height="27"/>
+  <object id="18" type="WALL" x="676" y="452" width="21" height="26"/>
+  <object id="19" type="WALL" x="613" y="484" width="21" height="25"/>
+  <object id="20" type="WALL" x="611" y="548" width="21" height="27"/>
+  <object id="21" type="WALL" x="581" y="578" width="21" height="27"/>
+  <object id="22" type="WALL" x="645" y="613" width="23" height="23"/>
+  <object id="23" type="WALL" x="515" y="550" width="23" height="28"/>
+  <object id="24" type="WALL" x="386" y="550" width="20" height="25"/>
+  <object id="25" type="WALL" x="677" y="368" width="22" height="41"/>
+  <object id="26" type="WALL" x="770" y="306" width="28" height="38"/>
+  <object id="27" type="WALL" x="20" y="383" width="180" height="81"/>
+  <object id="28" type="WALL" x="228" y="377" width="118" height="34"/>
+  <object id="29" type="WALL" x="6" y="482" width="53" height="53"/>
+  <object id="30" type="WALL" x="5" y="80" width="957" height="38"/>
+  <object id="31" type="WALL" x="418" y="173" width="30" height="20"/>
+  <object id="32" type="NPC" x="480" y="158" width="30" height="37">
+   <properties>
+    <property name="dialogue" value="Hello, traveler! | I can see that you're new here | Never seen you here before | I am the headman of this settlement | It was once a great city. | But you are not welcome here, go away."/>
+    <property name="name" value="Priest"/>
+   </properties>
+  </object>
+  <object id="33" type="NPC" x="804" y="130" width="27" height="35">
+   <properties>
+    <property name="dialogue" value="I'm still so young.|Why do I have to live in this godforsaken place?|Can you help me get out of this settlement?"/>
+    <property name="name" value="Maria, the dishwasher"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
