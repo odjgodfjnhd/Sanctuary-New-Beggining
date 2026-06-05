@@ -43,10 +43,19 @@ public class RestPointEntityBuilder {
                 dialogueConfig.lineSeparator()
         );
 
-        return entityBuilder(data)
+        RestPointData restPointData = new RestPointData(
+                displayName,
+                dialogueScript
+        );
+
+        Entity restPoint = entityBuilder(data)
                 .type(EntityType.REST_POINT)
                 .bbox(BoundingShape.box(width, height))
-                .with(new RestPointComponent(displayName, dialogueScript))
+                .with(new RestPointComponent())
                 .build();
+
+        RestPointProperties.setData(restPoint, restPointData);
+
+        return restPoint;
     }
 }

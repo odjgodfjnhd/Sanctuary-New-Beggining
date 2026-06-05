@@ -7,6 +7,8 @@ import com.sanctuary.dialogue.DialogueService;
 import com.sanctuary.entity.EntityType;
 import com.sanctuary.entity.npc.NPCComponent;
 import com.sanctuary.entity.rest.RestPointComponent;
+import com.sanctuary.entity.rest.RestPointData;
+import com.sanctuary.entity.rest.RestPointProperties;
 import com.sanctuary.game.GameSession;
 import com.sanctuary.save.SaveService;
 
@@ -97,7 +99,12 @@ public class InteractionService implements GameService {
 
     private void restAtPoint(RestPointComponent restPointComponent) {
         saveService.saveCurrentGame();
-        dialogueService.startDialogue(restPointComponent.getDialogueScript());
+
+        RestPointData restPointData = RestPointProperties.getData(
+                restPointComponent.getEntity()
+        );
+
+        dialogueService.startDialogue(restPointData.dialogueScript());
     }
 
     private double distanceBetween(Entity first, Entity second) {
