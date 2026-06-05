@@ -8,7 +8,10 @@ import com.sanctuary.config.GameConfig;
 import com.sanctuary.dialogue.DialogueService;
 import com.sanctuary.input.PlayerInputController;
 import com.sanctuary.interaction.InteractionService;
+import com.sanctuary.save.GameSaveRepository;
+import com.sanctuary.save.SaveService;
 import com.sanctuary.settings.SettingsService;
+import com.sanctuary.settings.UserSettingsRepository;
 import com.sanctuary.world.MapProvider;
 import com.sanctuary.world.MapService;
 import com.sanctuary.world.TiledMapProvider;
@@ -29,11 +32,23 @@ public class GameBootstrap {
         TransitionService transitionService = new TransitionService();
         DialogueService dialogueService = new DialogueService(dialogueConfig);
         AudioService audioService = new AudioService();
-        SettingsService settingsService = new SettingsService(audioService);
+
+        UserSettingsRepository userSettingsRepository = new UserSettingsRepository();
+        SettingsService settingsService = new SettingsService(
+                audioService,
+                userSettingsRepository
+        );
+
+        GameSaveRepository gameSaveRepository = new GameSaveRepository();
+        SaveService saveService = new SaveService(
+                session,
+                gameSaveRepository
+        );
 
         InteractionService interactionService = new InteractionService(
                 session,
-                dialogueService
+                dialogueService,
+                saveService
         );
 
         PlayerInputController playerInputController = new PlayerInputController(
@@ -49,7 +64,8 @@ public class GameBootstrap {
                 interactionService,
                 dialogueService,
                 audioService,
-                settingsService
+                settingsService,
+                saveService
         );
 
         GameControllers controllers = new GameControllers(

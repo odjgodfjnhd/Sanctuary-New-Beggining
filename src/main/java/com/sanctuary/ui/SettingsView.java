@@ -133,11 +133,21 @@ public class SettingsView {
         slider.setShowTickMarks(false);
 
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            double volume = newValue.doubleValue() / VOLUME_MAX;
+            double volume = toNormalizedVolume(newValue.doubleValue());
 
-            settingsService.setMusicVolume(volume);
+            settingsService.previewMusicVolume(volume);
             valueLabel.setText(formatVolume(volume));
         });
+
+        slider.valueChangingProperty().addListener((observable, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                settingsService.setMusicVolume(toNormalizedVolume(slider.getValue()));
+            }
+        });
+
+        slider.setOnMouseReleased(event ->
+                settingsService.setMusicVolume(toNormalizedVolume(slider.getValue()))
+        );
 
         HBox row = new HBox(16, label, slider, valueLabel);
         row.setAlignment(Pos.CENTER);
@@ -154,6 +164,10 @@ public class SettingsView {
         button.setOnAction(event -> backAction.run());
 
         return button;
+    }
+
+    private double toNormalizedVolume(double sliderValue) {
+        return sliderValue / VOLUME_MAX;
     }
 
     private String formatVolume(double volume) {

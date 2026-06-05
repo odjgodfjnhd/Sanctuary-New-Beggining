@@ -4,6 +4,7 @@ import com.sanctuary.audio.AudioService;
 import com.sanctuary.core.GameService;
 import com.sanctuary.dialogue.DialogueService;
 import com.sanctuary.interaction.InteractionService;
+import com.sanctuary.save.SaveService;
 import com.sanctuary.settings.SettingsService;
 import com.sanctuary.world.MapService;
 import com.sanctuary.world.TransitionService;
@@ -20,6 +21,7 @@ public final class GameServices implements GameService {
     private final DialogueService dialogueService;
     private final AudioService audioService;
     private final SettingsService settingsService;
+    private final SaveService saveService;
 
     public GameServices(
             MapService mapService,
@@ -27,7 +29,8 @@ public final class GameServices implements GameService {
             InteractionService interactionService,
             DialogueService dialogueService,
             AudioService audioService,
-            SettingsService settingsService
+            SettingsService settingsService,
+            SaveService saveService
     ) {
         this.mapService = mapService;
         this.transitionService = transitionService;
@@ -35,6 +38,7 @@ public final class GameServices implements GameService {
         this.dialogueService = dialogueService;
         this.audioService = audioService;
         this.settingsService = settingsService;
+        this.saveService = saveService;
     }
 
     @Override
@@ -73,6 +77,10 @@ public final class GameServices implements GameService {
         return settingsService;
     }
 
+    public SaveService getSaveService() {
+        return saveService;
+    }
+
     private List<GameService> services() {
         return List.of(
                 mapService,
@@ -80,6 +88,7 @@ public final class GameServices implements GameService {
                 interactionService,
                 dialogueService,
                 settingsService,
+                saveService,
                 audioService
         );
     }

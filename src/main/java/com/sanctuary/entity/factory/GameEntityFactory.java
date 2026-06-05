@@ -8,6 +8,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.sanctuary.entity.EntityType;
 import com.sanctuary.entity.common.BlockingComponent;
 import com.sanctuary.entity.npc.NpcEntityBuilder;
+import com.sanctuary.entity.rest.RestPointEntityBuilder;
 import com.sanctuary.world.TransitionComponent;
 
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
@@ -15,6 +16,7 @@ import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
 public class GameEntityFactory implements EntityFactory {
 
     private final NpcEntityBuilder npcEntityBuilder = new NpcEntityBuilder();
+    private final RestPointEntityBuilder restPointEntityBuilder = new RestPointEntityBuilder();
 
     @Spawns("PLAYER_SPAWN")
     public Entity newPlayerSpawnMarker(SpawnData data) {
@@ -53,5 +55,10 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("NPC")
     public Entity newNpc(SpawnData data) {
         return npcEntityBuilder.build(data);
+    }
+
+    @Spawns("REST_POINT")
+    public Entity newRestPoint(SpawnData data) {
+        return restPointEntityBuilder.build(data);
     }
 }

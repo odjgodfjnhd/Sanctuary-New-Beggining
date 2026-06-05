@@ -2,6 +2,8 @@ package com.sanctuary.ui;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
+import com.sanctuary.game.GameSession;
+import com.sanctuary.save.SaveService;
 import com.sanctuary.settings.SettingsService;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -37,12 +39,20 @@ public class SanctuaryMenu extends FXGLMenu {
     private static final double MIN_MENU_SPACING = 16.0;
     private static final double MAX_MENU_SPACING = 28.0;
 
+    private final GameSession session;
     private final SettingsService settingsService;
+    private final SaveService saveService;
 
-    public SanctuaryMenu(SettingsService settingsService) {
+    public SanctuaryMenu(
+            GameSession session,
+            SettingsService settingsService,
+            SaveService saveService
+    ) {
         super(MenuType.MAIN_MENU);
 
+        this.session = session;
         this.settingsService = settingsService;
+        this.saveService = saveService;
 
         loadStylesheet();
         showMainMenu();
@@ -70,7 +80,10 @@ public class SanctuaryMenu extends FXGLMenu {
         Text subtitleText = new Text("The New Beginning");
         subtitleText.getStyleClass().add(MAIN_MENU_SUBTITLE_STYLE_CLASS);
 
-        Button newGameButton = createMenuButton("Новая игра", this::fireNewGame);
+        Button continueButton = createMenuButton("Продолжить", this::continueGame);
+        continueButton.setDisable(!saveService.hasSave());
+
+        Button newGameButton = createMenuButton("Новая игра", this::startNewGame);
         Button settingsButton = createMenuButton("Настройки", this::showSettings);
         Button exitButton = createMenuButton("Выход", this::fireExit);
 
@@ -78,6 +91,7 @@ public class SanctuaryMenu extends FXGLMenu {
                 getMenuSpacing(),
                 titleText,
                 subtitleText,
+                continueButton,
                 newGameButton,
                 settingsButton,
                 exitButton
@@ -115,6 +129,16 @@ public class SanctuaryMenu extends FXGLMenu {
         button.setOnAction(event -> action.run());
 
         return button;
+    }
+
+    private void startNewGame() {
+        session.prepareNewGame();
+        fireNewGame();
+    }
+
+    private void continueGame() {
+        saveService.prepareSessionForSavedGame();
+        fireNewGame();
     }
 
     private void showSettings() {

@@ -12,12 +12,10 @@ public final class GameConfig {
     public static final boolean FULLSCREEN_FROM_START = true;
 
     public static final String TITLE = "Sanctuary: The New Beginning";
-    public static final String VERSION = "0.3.0";
+    public static final String VERSION = "0.4.0";
 
     public static final boolean MAIN_MENU_ENABLED = true;
 
     public static final String START_MAP_ID = "Forest";
     public static final String DEFAULT_SPAWN_ID = "player_spawn";
-
-    public static final String SAVE_FILE_NAME = "sanctuary_save.dat";
 }
